@@ -36,9 +36,10 @@ Rules:
 - "freelance", "freelancer", "self-employed", "consultant" → "self_employed"
 - "gig", "uber", "lyft", "doordash", "delivery", "rideshare" → "gig"
 - "contractor", "1099" → "contractor"
+- "unemployed", "no job", "no income", "no work", "between jobs", "laid off", "out of work" → employment_type: "unemployed", annual_income: 0
 - If income is mentioned as monthly, multiply by 12
 - If credit is described as "good" use 700, "excellent" use 760, "fair" use 640, "bad" use 580
-- income_stable is true unless they say income is irregular or inconsistent
+- income_stable is false if unemployed or income is irregular or inconsistent
 - Return ONLY the JSON, no explanation"""
 
     response = client.messages.create(
@@ -61,15 +62,18 @@ Rules:
 
 def fill_defaults(profile: dict) -> dict:
     """Fill null values with sensible defaults so matching can proceed."""
+    # Don't override explicitly extracted values like unemployment
+    is_unemployed = profile.get("employment_type") == "unemployed"
+
     defaults = {
         "credit_score": 650,
-        "annual_income": 40000,
+        "annual_income": 0 if is_unemployed else 40000,
         "employment_type": "salaried",
-        "years_at_current_work": 1.0,
+        "years_at_current_work": 0.0 if is_unemployed else 1.0,
         "loan_amount_needed": 10000,
         "loan_purpose": "personal",
         "total_assets": 0,
         "monthly_debt_payments": 0,
-        "income_stable": True,
+        "income_stable": False if is_unemployed else True,
     }
     return {k: (v if v is not None else defaults[k]) for k, v in {**defaults, **profile}.items()}
