@@ -45,11 +45,19 @@ async def chat(request: Request, body: ChatRequest, db: Session = Depends(get_db
     matches = find_matches(profile, lenders_data, top_k=5)
 
     if not matches:
-        return ChatResponse(
-            reply="Based on what you've shared, I wasn't able to find matching lenders. Could you share more details about your credit score, income, or loan purpose?",
-            profile_extracted=profile,
-            matches_found=0
-        )
+        if profile.get("employment_type") == "unemployed" or profile.get("annual_income", 0) == 0:
+            reply = (
+                "Unfortunately, lenders require an active income source to approve a loan. "
+                "Without verifiable income, no lender in our network can match you at this time.\n\n"
+                "**What you can do:**\n"
+                "- Return once you have employment or a documented income source\n"
+                "- Explore **Kiva** (0% microloans) if you have a business idea — they consider character over income\n"
+                "- Look into government assistance programs for your situation"
+            )
+        else:
+            reply = "Based on what you've shared, no lenders matched your profile. Try adjusting your credit score, income, or loan amount."
+
+        return ChatResponse(reply=reply, profile_extracted=profile, matches_found=0)
 
     # Step 4: Generate conversational response
     explanation = explain_matches(profile, matches)

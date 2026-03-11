@@ -11,6 +11,11 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
     breakdown = {}
     total = 0.0
 
+    # 0. Hard disqualify unemployed borrowers immediately
+    if borrower.get("employment_type") == "unemployed":
+        breakdown["employment"] = {"points": 0, "note": "No active income — disqualified by all lenders"}
+        return 0.0, breakdown
+
     # 1. Credit Score (20 points)
     credit = borrower.get("credit_score", 0)
     min_credit = lender.get("credit_score_min", 0)
