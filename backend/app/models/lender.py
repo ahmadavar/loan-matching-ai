@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float, JSON
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -12,17 +12,15 @@ class Lender(Base):
     website = Column(String)
     description = Column(String)
 
-    # Eligibility criteria
-    credit_score_min = Column(Integer)          # e.g. 620
-    credit_score_preferred = Column(Integer)    # e.g. 700
-    min_annual_income = Column(Float)           # e.g. 30000.0
+    credit_score_min = Column(Integer)
+    credit_score_preferred = Column(Integer)
+    min_annual_income = Column(Float)
     self_employed_friendly = Column(Boolean, default=False)
 
-    # Loan details
     loan_amount_min = Column(Float)
     loan_amount_max = Column(Float)
-    loan_types = Column(JSON)           # ["personal", "business", "mortgage"]
-    specializations = Column(JSON)      # ["self-employed", "gig workers"]
+    loan_types = Column(JSON)
+    specializations = Column(JSON)
+    accepted_employment_types = Column(JSON)
 
-    # Extra flexible data
     metadata_ = Column("metadata", JSON)
