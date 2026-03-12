@@ -1,6 +1,9 @@
 from typing import List, Dict
 import anthropic
 import os
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../../.env"))
 
 
 def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
@@ -14,6 +17,13 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
     # 0. Hard disqualify unemployed borrowers immediately
     if borrower.get("employment_type") == "unemployed":
         breakdown["employment"] = {"points": 0, "note": "No active income — disqualified by all lenders"}
+        return 0.0, breakdown
+
+    # 0b. Hard disqualify on loan purpose mismatch
+    purpose = borrower.get("loan_purpose", "personal")
+    loan_types = lender.get("loan_types", [])
+    if loan_types and purpose not in loan_types:
+        breakdown["loan_purpose"] = {"points": 0, "note": f"Lender only offers {loan_types} — disqualified"}
         return 0.0, breakdown
 
     # 1. Credit Score (20 points)
@@ -37,10 +47,20 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
     income = borrower.get("annual_income", 0)
     min_income = lender.get("min_annual_income", 0)
     income_stable = borrower.get("income_stable", True)  # 2+ years consistent
+    loan_amount = borrower.get("loan_amount_needed", 1)
+
+    # Hard floor: income must be at least 20% of loan amount annually
+    if income > 0 and income < loan_amount * 0.2:
+        breakdown["income"] = {"points": 0, "note": f"Income (${income:,.0f}/yr) too low to service ${loan_amount:,.0f} loan — disqualified"}
+        return 0.0, breakdown
 
     if min_income == 0 or income >= min_income:
-        pts = 20 if income_stable else 14
-        note = "Income meets requirement" + ("" if income_stable else " but stability unclear")
+        if income < 15000:
+            pts = 10 if income_stable else 6
+            note = f"Very low income (${income:,.0f}/yr) — limited repayment capacity"
+        else:
+            pts = 20 if income_stable else 14
+            note = "Income meets requirement" + ("" if income_stable else " but stability unclear")
         breakdown["income"] = {"points": pts, "note": note}
         total += pts
     elif income >= min_income * 0.8:
@@ -98,7 +118,10 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
     monthly_income = income / 12
     dti = (monthly_debt / monthly_income * 100) if monthly_income > 0 else 100
 
-    if dti < 20:
+    if dti >= 100:
+        breakdown["dti"] = {"points": 0, "note": f"DTI {dti:.0f}% — debt exceeds income, no lender will approve"}
+        return 0.0, breakdown  # Hard disqualification
+    elif dti < 20:
         breakdown["dti"] = {"points": 15, "note": f"Excellent DTI: {dti:.0f}%"}
         total += 15
     elif dti < 36:
@@ -111,21 +134,17 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
         breakdown["dti"] = {"points": 0, "note": f"DTI too high: {dti:.0f}%"}
 
     # 6. Loan Purpose Match (10 points)
-    purpose = borrower.get("loan_purpose", "personal")
-    loan_types = lender.get("loan_types", [])
-
-    if purpose in loan_types or not loan_types:
-        breakdown["loan_purpose"] = {"points": 10, "note": "Loan purpose supported"}
-        total += 10
-    else:
-        breakdown["loan_purpose"] = {"points": 0, "note": "Lender doesn't offer this loan type"}
+    # Already hard-disqualified at top if purpose doesn't match.
+    # Reaching here means purpose is supported.
+    breakdown["loan_purpose"] = {"points": 10, "note": "Loan purpose supported"}
+    total += 10
 
     return round(total, 2), breakdown
 
 
 def find_matches(borrower: Dict, lenders: List[Dict], top_k: int = 5) -> List[Dict]:
     """
-    Match borrower against all lenders. Returns top_k sorted by score.
+    Match borrower against all lenders using rule-based scoring.
     """
     results = []
 
