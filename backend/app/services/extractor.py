@@ -6,15 +6,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def extract_borrower_profile(user_message: str) -> dict | None:
+def extract_borrower_profile(user_message: str, pending_field: str = None) -> dict | None:
     """
     Use Claude to extract a structured borrower profile from natural language.
+    pending_field: if set, tells Claude what field the user is currently answering.
     Returns a dict matching BorrowerRequest schema, or None if extraction fails.
     """
     client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    prompt = f"""Extract borrower financial information from this message and return ONLY a valid JSON object.
+    context_hint = ""
+    if pending_field:
+        context_hint = f'\nIMPORTANT: The user is directly answering a question about "{pending_field}". Interpret their response in that context even if it is just a number or short phrase.\n'
 
+    prompt = f"""Extract borrower financial information from this message and return ONLY a valid JSON object.
+{context_hint}
 Message: "{user_message}"
 
 Return this exact JSON structure with your best estimates from the message.
@@ -40,6 +45,16 @@ Rules:
 - If income is mentioned as monthly, multiply by 12
 - If credit is described as "good" use 700, "excellent" use 760, "fair" use 640, "bad" use 580
 - income_stable is false if unemployed or income is irregular or inconsistent
+- loan_purpose mapping — be generous with interpretation:
+  - "tooth", "teeth", "dental", "doctor", "hospital", "surgery", "medical", "health", "vision", "prescription" → "medical"
+  - "car", "truck", "vehicle", "auto", "wheels" → "auto"
+  - "house", "home", "mortgage", "property", "real estate", "condo", "apartment" → "home"
+  - "fix", "repair", "renovate", "remodel", "upgrade" + home context → "home_improvement"
+  - "debt", "credit card", "pay off", "consolidate", "bills" → "debt_consolidation"
+  - "school", "tuition", "college", "university", "degree", "course" → "education"
+  - "business", "startup", "company", "shop", "store", "inventory" → "business"
+  - "trip", "vacation", "travel", "holiday" → "vacation"
+  - "rv", "camper", "motorhome", "trailer" → "rv"
 - Return ONLY the JSON, no explanation"""
 
     response = client.messages.create(

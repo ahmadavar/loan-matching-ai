@@ -17,6 +17,23 @@ Loan Matching AI Assistant uses a multi-dimensional scoring engine that evaluate
 - **Debt-to-Income Ratio** — real affordability signal
 - **Loan Purpose** — lender specialization alignment
 
+## Lender Data Pipeline
+
+The platform is architected for progressive data quality improvement. All lender data flows through a single `get_lenders()` function in `backend/app/services/providers.py` — swapping phases requires changing only that one file.
+
+### Phase 1 — Static Profiles (current)
+52 manually researched lender profiles seeded into PostgreSQL at startup. Covers major banks (Chase, Bank of America, Wells Fargo, Citi), credit unions (Navy Federal, USAA, PenFed, Alliant), fintech lenders (SoFi, Upstart, LendingClub), and specialists across personal, auto, home, business, medical, and education loans.
+
+### Phase 2 — Engine by Even Financial API (planned)
+Replace `get_lenders()` with a call to the [Engine by Even Financial](https://www.engine.tech) API — the same aggregator powering NerdWallet and Credit Karma. This returns real-time pre-qualified offers from 100+ lenders for a given borrower profile, enabling live rates instead of static criteria.
+
+**What changes:** only `providers.py`. The matching engine, scoring logic, and frontend are untouched.
+
+### Phase 3 — Hybrid (future)
+Engine API for real-time rate offers + DB for lenders not covered by the aggregator (niche credit unions, CDFI lenders, microfinance). Best of both.
+
+---
+
 ## Tech Stack
 
 - **Backend**: Python, FastAPI

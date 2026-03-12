@@ -5,8 +5,8 @@ from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
 from backend.app.services.matching import find_matches, explain_matches
+from backend.app.services.providers import get_lenders
 from backend.app.database import get_db
-from backend.app.models.lender import Lender
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
@@ -32,20 +32,12 @@ class MatchResponse(BaseModel):
 
 
 @router.post("/match", response_model=list[MatchResponse])
-@limiter.limit("10/day")
+@limiter.limit("50/day")
 async def match_borrower(request: Request, borrower: BorrowerRequest, db: Session = Depends(get_db)):
-    # Load lenders from database
-    lenders = db.query(Lender).all()
+    lenders_data = get_lenders(db)
 
-    if not lenders:
+    if not lenders_data:
         raise HTTPException(status_code=503, detail="Lender database is empty.")
-
-    # Convert SQLAlchemy objects to dicts
-    lenders_data = [
-        {c.name if c.name != "metadata" else "metadata_": getattr(l, c.name if c.name != "metadata" else "metadata_")
-         for c in Lender.__table__.columns}
-        for l in lenders
-    ]
 
     borrower_dict = borrower.model_dump()
     matches = find_matches(borrower_dict, lenders_data, top_k=5)
