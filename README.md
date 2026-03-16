@@ -1,99 +1,167 @@
-# Loan Matching AI Assistant
+# LoanMatch AI
 
-An intelligent loan matching platform that goes beyond traditional credit scoring to match borrowers with the right lenders — built for gig workers, freelancers, contractors, and self-employed professionals.
+> An AI-powered loan matching platform built for the people traditional banks ignore — gig workers, freelancers, contractors, and self-employed professionals.
+
+**Live**: [loanmatchai.app](https://loanmatchai.app)
+
+---
 
 ## The Problem
 
-Traditional loan matching platforms evaluate borrowers on a narrow set of criteria: credit score, income, and employment status. This excludes millions of non-traditional workers who are financially stable but don't fit the conventional mold.
+Traditional loan matching platforms evaluate borrowers on a narrow set of criteria: credit score, income, and employment status. This excludes tens of millions of non-traditional workers who are financially stable but don't fit the conventional W-2 mold.
+
+An Uber driver with $70K/year income and 4 years of consistent earnings is a better borrower than many salaried employees — but most platforms reject or deprioritize them at first filter.
 
 ## The Solution
 
-Loan Matching AI Assistant uses a multi-dimensional scoring engine that evaluates borrowers across 6 dimensions:
+LoanMatch AI uses a **multi-dimensional scoring engine** that evaluates borrowers across 6 dimensions and routes their profile through a **multi-agent AI system** to find the best-fit lenders:
 
-- **Credit Score** — baseline eligibility
-- **Income + Stability** — amount and consistency over time
-- **Assets & Net Worth** — compensating factors for irregular income
-- **Employment Type & Experience** — gig, freelance, contractor-aware
-- **Debt-to-Income Ratio** — real affordability signal
-- **Loan Purpose** — lender specialization alignment
+| Dimension | What it measures |
+|---|---|
+| Credit Score | Baseline eligibility threshold |
+| Income + Stability | Amount and consistency over 2+ years |
+| Assets & Net Worth | Compensating factors for irregular income |
+| Employment Type | Gig, freelance, contractor, 1099-aware logic |
+| Debt-to-Income Ratio | Real affordability signal |
+| Loan Purpose | Lender specialization alignment |
 
-## Lender Data Pipeline
+---
 
-The platform is architected for progressive data quality improvement. All lender data flows through a single `get_lenders()` function in `backend/app/services/providers.py` — swapping phases requires changing only that one file.
+## Architecture
 
-### Phase 1 — Static Profiles (current)
-52 manually researched lender profiles seeded into PostgreSQL at startup. Covers major banks (Chase, Bank of America, Wells Fargo, Citi), credit unions (Navy Federal, USAA, PenFed, Alliant), fintech lenders (SoFi, Upstart, LendingClub), and specialists across personal, auto, home, business, medical, and education loans.
-
-### Phase 2 — Engine by Even Financial API (planned)
-Replace `get_lenders()` with a call to the [Engine by Even Financial](https://www.engine.tech) API — the same aggregator powering NerdWallet and Credit Karma. This returns real-time pre-qualified offers from 100+ lenders for a given borrower profile, enabling live rates instead of static criteria.
-
-**What changes:** only `providers.py`. The matching engine, scoring logic, and frontend are untouched.
-
-### Phase 3 — Hybrid (future)
-Engine API for real-time rate offers + DB for lenders not covered by the aggregator (niche credit unions, CDFI lenders, microfinance). Best of both.
+```
+┌─────────────────────────────────────┐
+│   Next.js 14 (App Router)           │  Frontend + BFF
+│   TypeScript + Tailwind + shadcn/ui │
+└────────────────┬────────────────────┘
+                 │ REST API
+┌────────────────▼────────────────────┐
+│   FastAPI (Python)                  │  AI Microservice
+│   Multi-agent orchestration         │
+│   Claude Haiku (extraction, advice) │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│   PostgreSQL + pgvector             │  Data Layer
+│   Redis (sessions + rate limiting)  │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│   Airflow + dbt + Kafka             │  Data Platform (in progress)
+│   Lender ingestion + analytics      │
+└─────────────────────────────────────┘
+```
 
 ---
 
 ## Tech Stack
 
-- **Backend**: Python, FastAPI
-- **Frontend**: Streamlit
-- **AI**: Anthropic Claude API
-- **Database**: PostgreSQL
-- **Rate Limiting**: SlowAPI (10 requests/day per IP)
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14, TypeScript, Tailwind CSS, shadcn/ui |
+| Backend | Python, FastAPI |
+| AI | Anthropic Claude API (Haiku), pgvector embeddings |
+| Database | PostgreSQL |
+| Data Platform | Airflow, dbt, Kafka *(in progress)* |
+| Infrastructure | Docker, Railway, GitHub Actions |
+
+---
+
+## Lender Data Pipeline
+
+All lender data flows through a single `get_lenders()` function — swapping phases requires changing only that one file.
+
+### Phase 1 — Static Profiles (current)
+52 manually researched lender profiles seeded into PostgreSQL. Covers major banks (Chase, BofA, Wells Fargo), credit unions (Navy Federal, USAA, PenFed), fintechs (SoFi, Upstart, LendingClub), and specialists across personal, auto, home, business, medical, and education loans.
+
+### Phase 2 — Engine by Even Financial API (planned)
+Replace `get_lenders()` with a call to the [Engine by Even Financial](https://www.engine.tech) API — the same aggregator powering NerdWallet and Credit Karma. Real-time pre-qualified offers from 100+ lenders.
+
+**What changes:** only `providers.py`. Matching engine, scoring logic, and frontend are untouched.
+
+### Phase 3 — Hybrid (future)
+Engine API for real-time rates + DB for niche lenders not covered by the aggregator (CDFIs, microfinance, credit unions).
+
+---
+
+## Multi-Agent AI System *(in progress)*
+
+The AI layer is being refactored from a single Claude call into a 5-agent orchestrated system:
+
+| Agent | Role |
+|---|---|
+| Profile Extractor | Parses natural language into structured borrower profile |
+| Eligibility Screener | Hard disqualifications before scoring |
+| Lender Matcher | 6-dimension scoring engine |
+| Explanation Writer | Plain-English verdict per match |
+| Improvement Advisor | "Here's what to change to get approved" |
+
+---
 
 ## Features
 
-- Multi-dimensional borrower scoring
-- 50+ curated lender profiles
+- Conversational AI chat — describe your situation in plain English
+- Detailed form for precision matching
+- 52+ curated lender profiles across all loan types
 - AI-generated advisor verdict per match
-- Rate limiting to prevent abuse
-- Clean, responsive UI
+- Dimension-by-dimension score breakdown
+- Rate limiting + abuse prevention
+- Dark mode, mobile-responsive UI
+
+---
 
 ## Running Locally
 
 ```bash
-# Clone the repo
 git clone https://github.com/ahmadavar/loan-matching-ai.git
 cd loan-matching-ai
 
-# Create virtual environment
+# Backend (FastAPI)
 python3 -m venv venv
 source venv/bin/activate
+pip install -r backend/requirements.txt
+cp .env.example .env  # Add ANTHROPIC_API_KEY
 
-# Install dependencies
-pip install -r backend/requirements.txt -r frontend/requirements.txt
-
-# Set environment variables
-cp .env.example .env
-# Add your ANTHROPIC_API_KEY to .env
-
-# Start backend
 uvicorn backend.app.main:app --reload --port 8000
 
-# Start frontend (new terminal)
-streamlit run frontend/app.py
+# Frontend (Next.js)
+cd frontend-next
+npm install
+npm run dev
 ```
+
+Or with Docker:
+```bash
+docker compose up
+```
+
+---
 
 ## API
 
 ```
-POST /api/match
+POST /api/match     — Score borrower against all lenders
+POST /api/chat      — Conversational profile extraction + matching
+GET  /health        — Health check
 ```
 
-Request:
-```json
-{
-  "credit_score": 680,
-  "annual_income": 60000,
-  "employment_type": "gig",
-  "years_at_current_work": 3,
-  "loan_amount_needed": 20000,
-  "loan_purpose": "personal",
-  "total_assets": 50000,
-  "monthly_debt_payments": 500,
-  "income_stable": true
-}
-```
+---
 
-Response: Ranked list of matched lenders with score breakdown and advisor verdict.
+## Build Milestones
+
+- [x] Multi-dimensional scoring engine (6 dimensions)
+- [x] 52 lender profiles in PostgreSQL
+- [x] Conversational AI chat with Claude
+- [x] pgvector semantic lender search
+- [x] Docker + Railway deployment
+- [ ] Next.js frontend (replacing Streamlit)
+- [ ] Multi-agent orchestration (5 agents)
+- [ ] Airflow lender data pipeline
+- [ ] dbt analytics models
+- [ ] Kafka event streaming
+- [ ] Prometheus + Grafana monitoring
+- [ ] Engine by Even Financial API integration
+
+---
+
+*Built by Ahmad Avar — [loanmatchai.app](https://loanmatchai.app)*
