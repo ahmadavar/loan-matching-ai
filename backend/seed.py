@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from backend.app.database import engine, SessionLocal
 from backend.app.models.lender import Base, Lender
+from backend.app.models.match_result import MatchResult  # noqa: F401 — registers table
 from backend.app.data.lenders import LENDERS
 
 
