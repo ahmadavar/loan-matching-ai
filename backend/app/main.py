@@ -4,9 +4,15 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from backend.app.routers import matching, chat
+from backend.app.database import engine
+from backend.app.models.lender import Base
+from backend.app.models.match_result import MatchResult  # noqa: F401 — ensures table is registered
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Auto-create any missing tables on startup (safe — won't drop existing ones)
+Base.metadata.create_all(bind=engine)
 
 limiter = Limiter(key_func=get_remote_address)
 
