@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import MobileNav from "@/components/MobileNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,6 +19,11 @@ export const metadata: Metadata = {
   title: "LoanMatch AI — Smart Lending for Everyone",
   description:
     "AI-powered loan matching for gig workers, freelancers, and self-employed professionals. Find your best loan options in seconds.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -41,7 +47,9 @@ export default function RootLayout({
               />
               <span className="text-sm font-semibold tracking-tight">LoanMatch AI</span>
             </Link>
-            <div className="flex items-center gap-6">
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-6">
               <Link href="/chat" className="text-xs text-white/50 hover:text-white transition-colors">
                 AI Chat
               </Link>
@@ -60,6 +68,17 @@ export default function RootLayout({
               >
                 Get Matched
               </Link>
+            </div>
+
+            {/* Mobile: CTA + hamburger */}
+            <div className="flex md:hidden items-center gap-3">
+              <Link
+                href="/match"
+                className="text-xs px-3 py-1.5 rounded bg-[#38bdf8] text-black font-medium hover:bg-[#7dd3fc] transition-colors"
+              >
+                Get Matched
+              </Link>
+              <MobileNav />
             </div>
           </div>
         </nav>
