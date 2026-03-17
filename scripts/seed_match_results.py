@@ -102,7 +102,7 @@ def seed():
     print("Cleared existing match results.")
 
     rows = []
-    for i in range(500):
+    for i in range(1135):
         profile = generate_profile()
         matches = find_matches(profile, lenders, top_k=5)
 
@@ -140,13 +140,13 @@ def seed():
         )
         rows.append(row)
 
-        if (i + 1) % 50 == 0:
-            print(f"  Generated {i + 1}/500...")
+        if (i + 1) % 100 == 0:
+            print(f"  Generated {i + 1}/1135...")
 
     db.bulk_save_objects(rows)
     db.commit()
     db.close()
-    print("Done — 500 match results seeded.")
+    print("Done — 1135 match results seeded.")
 
 if __name__ == "__main__":
     seed()
