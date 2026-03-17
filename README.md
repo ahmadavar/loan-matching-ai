@@ -2,7 +2,7 @@
 
 > An AI-powered loan matching platform built for the people traditional banks ignore — gig workers, freelancers, contractors, and self-employed professionals.
 
-**Live**: [loanmatchai.app](https://loanmatchai.app)
+**Live**: [loanmatchai.app](https://loanmatchai.app) | **Data Pipeline Docs**: [dbt lineage & models](https://ahmadavar.github.io/loan-matching-ai/)
 
 ---
 
