@@ -1,0 +1,51 @@
+version: 2
+
+sources:
+  - name: loanmatch
+    database: railway
+    schema: public
+    tables:
+      - name: match_results
+        description: "Raw applicant match results from the LoanMatch AI engine"
+      - name: lenders
+        description: "Lender reference table with eligibility criteria"
+
+models:
+  - name: stg_match_results
+    description: "Cleaned and enriched match results with derived fields"
+    columns:
+      - name: match_id
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+      - name: credit_score
+        description: "Applicant credit score"
+        data_tests:
+          - not_null
+          - between_values:
+              min_value: 300
+              max_value: 850
+      - name: top_lender_score
+        description: "Best match score (0-100), null when no match found"
+      - name: employment_type
+        description: "Applicant employment type"
+        data_tests:
+          - accepted_values:
+              values: ['salaried', 'self_employed', 'gig', 'unemployed', 'retired', 'contractor']
+      - name: loan_purpose
+        description: "Reason for the loan"
+        data_tests:
+          - accepted_values:
+              values: ['personal', 'auto', 'home', 'home_improvement', 'business', 'medical', 'education', 'debt_consolidation']
+
+  - name: stg_lenders
+    description: "Cleaned lender reference data"
+    columns:
+      - name: lender_id
+        data_tests:
+          - unique
+          - not_null
+      - name: lender_name
+        data_tests:
+          - not_null
