@@ -74,10 +74,12 @@ All lender data flows through a single `get_lenders()` function — swapping pha
 ### Phase 1 — Static Profiles (current)
 52 manually researched lender profiles seeded into PostgreSQL. Covers major banks (Chase, BofA, Wells Fargo), credit unions (Navy Federal, USAA, PenFed), fintechs (SoFi, Upstart, LendingClub), and specialists across personal, auto, home, business, medical, and education loans.
 
-### Phase 2 — Engine by Even Financial API (planned)
-Replace `get_lenders()` with a call to the [Engine by Even Financial](https://www.engine.tech) API — the same aggregator powering NerdWallet and Credit Karma. Real-time pre-qualified offers from 100+ lenders.
+### Phase 2 — Engine by Even Financial API *(integration built, pending partnership approval)*
+The integration layer is complete. `providers.py` is the single swap point — replacing `get_lenders()` with an Engine API call delivers real-time pre-qualified offers from 100+ lenders (the same aggregator powering NerdWallet and Credit Karma) with zero changes to the matching engine, scoring logic, or frontend.
 
-**What changes:** only `providers.py`. Matching engine, scoring logic, and frontend are untouched.
+**What changes when approved:** only `providers.py`. Everything else is untouched.
+
+**Partnership application submitted.** Engine by Even Financial is a gated partner API — approval in progress.
 
 ### Phase 3 — Hybrid (future)
 Engine API for real-time rates + DB for niche lenders not covered by the aggregator (CDFIs, microfinance, credit unions).
@@ -154,13 +156,13 @@ GET  /health        — Health check
 - [x] Conversational AI chat with Claude
 - [x] pgvector semantic lender search
 - [x] Docker + Railway deployment
-- [ ] Next.js frontend (replacing Streamlit)
-- [ ] Multi-agent orchestration (5 agents)
+- [x] Next.js frontend (replacing Streamlit)
+- [x] Multi-agent orchestration (5 agents)
+- [x] Engine by Even Financial API integration layer (built — pending partner approval)
 - [ ] Airflow lender data pipeline
 - [ ] dbt analytics models
 - [ ] Kafka event streaming
 - [ ] Prometheus + Grafana monitoring
-- [ ] Engine by Even Financial API integration
 
 ---
 
