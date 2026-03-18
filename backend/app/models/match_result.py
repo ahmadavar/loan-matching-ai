@@ -27,5 +27,10 @@ class MatchResult(Base):
     top_lender_score = Column(Float)
     advisor_fired = Column(Boolean, default=False)  # True when score < 60 or no matches
 
+    # Analytics dimensions (added for BI pipeline)
+    outcome = Column(String)       # approved / rejected / pending
+    state = Column(String)         # US state (2-letter)
+    funded_amount = Column(Float)  # 0 if rejected/pending, actual amount if approved
+
     # Full match details
     matches_json = Column(JSON)
