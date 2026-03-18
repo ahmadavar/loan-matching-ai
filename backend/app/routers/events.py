@@ -21,7 +21,7 @@ def log_event(payload: EventPayload, db: Session = Depends(get_db)):
         event_type=payload.event_type,
         page=payload.page,
         session_id=payload.session_id,
-        metadata=payload.metadata,
+        event_meta=payload.metadata,
     )
     db.add(event)
     db.commit()
