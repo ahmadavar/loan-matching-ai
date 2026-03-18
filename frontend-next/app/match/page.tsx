@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { track } from "@/lib/track";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -156,6 +157,8 @@ export default function MatchPage() {
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
+  useEffect(() => { track("page_view", "/match"); }, []);
+
   function set(key: string, value: string | number | boolean) {
     setForm((f) => ({ ...f, [key]: value }));
     setDone(false);
@@ -184,6 +187,7 @@ export default function MatchPage() {
         const data = await res.json();
         setMatches(data);
         setDone(true);
+        track("match_run", "/match", { lenders_found: data.length, employment_type: form.employment_type, loan_purpose: form.loan_purpose });
       }
     } catch {
       setError("Could not reach the server. Check your connection.");

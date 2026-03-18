@@ -22,7 +22,7 @@ vars:
       applicant funnel conversion by credit band, employment type, and loan purpose.
 
     Stack: PostgreSQL (Railway) · dbt Core 1.11 · Python 3.12
-    Live app: https://loanmatchai.app
+    Live app: https://www.loanmatchai.app
 
 # This setting configures which "profile" dbt uses for this project.
 profile: 'loanmatch_dbt'

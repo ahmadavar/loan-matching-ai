@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { track } from "@/lib/track";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -115,6 +116,8 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { track("page_view", "/chat"); }, []);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, matches]);
@@ -127,6 +130,7 @@ export default function ChatPage() {
     setMessages((m) => [...m, userMsg]);
     setInput("");
     setLoading(true);
+    track("chat_message", "/chat");
 
     try {
       const res = await fetch(`${API}/api/chat`, {
@@ -156,6 +160,7 @@ export default function ChatPage() {
       if (data.ready) {
         setMatches(data.matches ?? []);
         setDone(true);
+        track("match_run", "/chat", { lenders_found: data.matches?.length ?? 0, via: "chat" });
       }
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Could not reach the server. Check your connection." }]);
