@@ -11,4 +11,4 @@ class UserEvent(Base):
     event_type = Column(String, nullable=False)  # page_view | match_run | chat_message | calculator_used | contact_submitted
     page = Column(String)          # /match, /chat, /calculator, etc.
     session_id = Column(String)    # random ID from frontend (no login required)
-    metadata = Column(JSON)        # extra context: {lender_count, credit_score_range, etc.}
+    event_meta = Column(JSON)      # extra context: {lender_count, credit_score_range, etc.}
