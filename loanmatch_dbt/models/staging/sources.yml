@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: loanmatch
-    database: railway
-    schema: public
+    database: electric-cosine-485318-f9
+    schema: loanmatch_raw
     tables:
       - name: match_results
         description: "Raw applicant match results from the LoanMatch AI engine"

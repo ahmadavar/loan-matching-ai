@@ -11,3 +11,12 @@ venv/
 loanmatch_dbt/target/
 loanmatch_dbt/dbt_packages/
 loanmatch_dbt/logs/
+
+# Airflow runtime files
+pipeline/logs/
+pipeline/airflow.db
+pipeline/airflow.cfg
+pipeline/dags/__pycache__/
+
+# App logs
+logs/

@@ -23,7 +23,7 @@ cleaned as (
 
         -- derived: debt-to-income ratio
         round(
-            (monthly_debt_payments * 12 / nullif(annual_income, 0) * 100)::numeric,
+            cast(monthly_debt_payments * 12 / nullif(annual_income, 0) * 100 as numeric),
             2
         )                                           as dti_ratio,
 

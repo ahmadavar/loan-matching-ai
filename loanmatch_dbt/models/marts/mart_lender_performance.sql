@@ -10,15 +10,15 @@ lenders as (
 lender_stats as (
     select
         top_lender_name                                         as lender_name,
-        count(*)                                                as times_top_match,
-        round(avg(top_lender_score)::numeric, 1)               as avg_match_score,
-        round(min(top_lender_score)::numeric, 1)               as min_match_score,
-        round(max(top_lender_score)::numeric, 1)               as max_match_score,
-        count(*) filter (where top_lender_score >= 80)         as high_quality_matches,
+        count(*)                                                        as times_top_match,
+        round(cast(avg(top_lender_score) as float64), 1)               as avg_match_score,
+        round(cast(min(top_lender_score) as float64), 1)               as min_match_score,
+        round(cast(max(top_lender_score) as float64), 1)               as max_match_score,
+        countif(top_lender_score >= 80)                                 as high_quality_matches,
         round(
-            count(*) filter (where top_lender_score >= 80)::numeric
+            cast(countif(top_lender_score >= 80) as float64)
             / nullif(count(*), 0) * 100, 1
-        )                                                       as pct_high_quality
+        )                                                               as pct_high_quality
     from matches
     where top_lender_name is not null
     group by top_lender_name
