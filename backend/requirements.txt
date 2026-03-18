@@ -4,5 +4,5 @@ sqlalchemy
 psycopg2-binary
 anthropic
 python-dotenv
-pydantic
+pydantic[email]
 slowapi
