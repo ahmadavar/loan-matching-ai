@@ -9,6 +9,7 @@ const links = [
   { href: "/calculator", label: "Loan Calculator" },
   { href: "/lenders", label: "Lenders" },
   { href: "/story", label: "Story" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function MobileNav() {

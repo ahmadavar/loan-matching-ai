@@ -3,10 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from backend.app.routers import matching, chat
+from backend.app.routers import matching, chat, contact, events
 from backend.app.database import engine
 from backend.app.models.lender import Base
 from backend.app.models.match_result import MatchResult  # noqa: F401 — ensures table is registered
+from backend.app.models.contact import ContactRequest    # noqa: F401
+from backend.app.models.user_event import UserEvent      # noqa: F401
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,6 +37,8 @@ app.add_middleware(
 
 app.include_router(matching.router, prefix="/api", tags=["matching"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
+app.include_router(contact.router, prefix="/api", tags=["contact"])
+app.include_router(events.router, prefix="/api", tags=["events"])
 
 
 @app.get("/health")

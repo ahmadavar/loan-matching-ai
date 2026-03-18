@@ -62,6 +62,9 @@ export default function RootLayout({
               <Link href="/story" className="text-xs text-white/50 hover:text-white transition-colors">
                 Story
               </Link>
+              <Link href="/contact" className="text-xs text-white/50 hover:text-white transition-colors">
+                Contact
+              </Link>
               <Link
                 href="/match"
                 className="text-xs px-3 py-1.5 rounded bg-[#38bdf8] text-black font-medium hover:bg-[#7dd3fc] transition-colors"
