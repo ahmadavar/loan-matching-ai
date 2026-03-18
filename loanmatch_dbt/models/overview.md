@@ -2,7 +2,7 @@
 
 ## LoanMatch AI — Data Pipeline
 
-Analytics pipeline for [LoanMatch AI](https://loanmatchai.app), a loan matching platform built for gig workers, freelancers, and self-employed professionals that traditional banks overlook.
+Analytics pipeline for [LoanMatch AI](https://www.loanmatchai.app), a loan matching platform built for gig workers, freelancers, and self-employed professionals that traditional banks overlook.
 
 ---
 
