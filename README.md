@@ -166,4 +166,4 @@ GET  /health        — Health check
 
 ---
 
-*Built by Ahmad Avar — [loanmatchai.app](https://loanmatchai.app)*
+*Built by Ahmad — [loanmatchai.app](https://www.loanmatchai.app)*
