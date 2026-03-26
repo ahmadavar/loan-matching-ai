@@ -44,9 +44,9 @@ export default function ContactPage() {
     <div className="max-w-xl mx-auto px-6 py-24">
       {/* Header */}
       <div className="mb-12">
-        <div className="text-xs text-white/30 uppercase tracking-widest mb-4">Get in touch</div>
+        <div className="text-xs text-white/50 uppercase tracking-widest mb-4">Get in touch</div>
         <h1 className="text-4xl font-bold tracking-tight leading-[1.15] mb-4">Contact Us</h1>
-        <p className="text-white/40 text-base leading-relaxed">
+        <p className="text-white/65 text-base leading-relaxed">
           Questions, partnerships, or feedback — we read everything.
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function ContactPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs text-white/40 mb-1.5 uppercase tracking-wide">Name</label>
+            <label className="block text-xs text-white/65 mb-1.5 uppercase tracking-wide">Name</label>
             <input
               type="text"
               required
@@ -78,7 +78,7 @@ export default function ContactPage() {
           </div>
 
           <div>
-            <label className="block text-xs text-white/40 mb-1.5 uppercase tracking-wide">Email</label>
+            <label className="block text-xs text-white/65 mb-1.5 uppercase tracking-wide">Email</label>
             <input
               type="email"
               required
@@ -90,7 +90,7 @@ export default function ContactPage() {
           </div>
 
           <div>
-            <label className="block text-xs text-white/40 mb-1.5 uppercase tracking-wide">Message</label>
+            <label className="block text-xs text-white/65 mb-1.5 uppercase tracking-wide">Message</label>
             <textarea
               required
               rows={5}

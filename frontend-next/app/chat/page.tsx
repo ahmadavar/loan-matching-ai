@@ -194,14 +194,14 @@ export default function ChatPage() {
                 <span className="text-[#38bdf8] text-lg">✦</span>
               </div>
               <h2 className="text-lg font-semibold mb-2">Tell me your situation</h2>
-              <p className="text-sm text-white/40 mb-8 leading-relaxed">
+              <p className="text-sm text-white/65 mb-8 leading-relaxed">
                 Describe your income, credit, and what you need the loan for.
                 I&apos;ll find your best lender matches.
               </p>
               <div className="space-y-2">
                 {EXAMPLES.map((ex) => (
                   <button key={ex} onClick={() => send(ex)}
-                    className="w-full text-left text-xs text-white/50 px-4 py-3 rounded-xl border border-white/8 hover:border-[#38bdf8]/30 hover:text-white/70 transition-all leading-snug">
+                    className="w-full text-left text-xs text-white/70 px-4 py-3 rounded-xl border border-white/8 hover:border-[#38bdf8]/30 hover:text-white transition-all leading-snug">
                     {ex}
                   </button>
                 ))}
@@ -223,7 +223,7 @@ export default function ChatPage() {
                 <div className={`max-w-[76%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                   msg.role === "user"
                     ? "bg-[#38bdf8] text-black font-medium rounded-br-none"
-                    : "bg-white/[0.04] border border-white/8 text-white/75 rounded-bl-none"
+                    : "bg-white/[0.04] border border-white/8 text-white/85 rounded-bl-none"
                 }`}>
                   {lines.map((line, j) => (
                     <span key={j}>
