@@ -86,9 +86,9 @@ Engine API for real-time rates + DB for niche lenders not covered by the aggrega
 
 ---
 
-## Multi-Agent AI System *(in progress)*
+## Multi-Agent AI System
 
-The AI layer is being refactored from a single Claude call into a 5-agent orchestrated system:
+The AI layer was refactored from a single Claude call into a 5-agent orchestrated system:
 
 | Agent | Role |
 |---|---|
