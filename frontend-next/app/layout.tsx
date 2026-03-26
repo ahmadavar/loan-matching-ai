@@ -50,19 +50,19 @@ export default function RootLayout({
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/chat" className="text-xs text-white/50 hover:text-white transition-colors">
+              <Link href="/chat" className="text-xs text-white/70 hover:text-white transition-colors">
                 AI Chat
               </Link>
-              <Link href="/calculator" className="text-xs text-white/50 hover:text-white transition-colors">
+              <Link href="/calculator" className="text-xs text-white/70 hover:text-white transition-colors">
                 Loan Calculator
               </Link>
-              <Link href="/lenders" className="text-xs text-white/50 hover:text-white transition-colors">
+              <Link href="/lenders" className="text-xs text-white/70 hover:text-white transition-colors">
                 Lenders
               </Link>
-              <Link href="/story" className="text-xs text-white/50 hover:text-white transition-colors">
+              <Link href="/story" className="text-xs text-white/70 hover:text-white transition-colors">
                 Story
               </Link>
-              <Link href="/contact" className="text-xs text-white/50 hover:text-white transition-colors">
+              <Link href="/contact" className="text-xs text-white/70 hover:text-white transition-colors">
                 Contact
               </Link>
               <Link
