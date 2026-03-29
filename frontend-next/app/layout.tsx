@@ -91,14 +91,22 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="border-t border-white/8 mt-24">
-          <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between">
+          <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Image src="/logo.png" alt="LoanMatch AI" width={20} height={20} className="rounded-sm opacity-60" />
               <span className="text-xs text-white/45">LoanMatch AI</span>
             </div>
-            <p className="text-xs text-white/40">
+            <p className="text-xs text-white/40 text-center">
               For informational purposes only. Not financial advice.
             </p>
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+                Terms of Service
+              </Link>
+            </div>
           </div>
         </footer>
       </body>
