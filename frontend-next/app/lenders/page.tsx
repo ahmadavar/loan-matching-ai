@@ -153,16 +153,16 @@ function LenderRow({ lender }: { lender: Lender }) {
           )}
         </div>
         <div className="flex items-center gap-4 shrink-0">
-          <span className="text-xs text-white/25 hidden sm:block font-mono">
+          <span className="text-xs text-white/40 hidden sm:block font-mono">
             {fmtMoney(lender.loan_amount_min)} – {fmtMoney(lender.loan_amount_max)}
           </span>
-          <span className="text-white/25 text-[10px]">{open ? "▲" : "▼"}</span>
+          <span className="text-white/40 text-[10px]">{open ? "▲" : "▼"}</span>
         </div>
       </button>
 
       {open && (
         <div className="px-4 pb-5 space-y-4 border-t border-white/6">
-          <p className="text-sm text-white/45 leading-relaxed pt-3">{lender.description}</p>
+          <p className="text-sm text-white/60 leading-relaxed pt-3">{lender.description}</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
@@ -172,7 +172,7 @@ function LenderRow({ lender }: { lender: Lender }) {
               { label: "Loan Range", value: `${fmtMoney(lender.loan_amount_min)} – ${fmtMoney(lender.loan_amount_max)}` },
             ].map((s) => (
               <div key={s.label} className="bg-white/[0.03] rounded-lg px-3 py-2.5">
-                <div className="text-[10px] text-white/30 mb-1">{s.label}</div>
+                <div className="text-[10px] text-white/45 mb-1">{s.label}</div>
                 <div className="text-sm font-mono font-medium">{s.value}</div>
               </div>
             ))}
@@ -180,17 +180,17 @@ function LenderRow({ lender }: { lender: Lender }) {
 
           <div className="flex flex-col sm:flex-row gap-3 text-xs">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-white/30 shrink-0">Loan types</span>
+              <span className="text-white/45 shrink-0">Loan types</span>
               {lender.loan_types.map((t) => (
-                <span key={t} className="px-2 py-0.5 rounded bg-white/5 text-white/45">
+                <span key={t} className="px-2 py-0.5 rounded bg-white/5 text-white/60">
                   {t.replace(/_/g, " ")}
                 </span>
               ))}
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-white/30 shrink-0">Employment</span>
+              <span className="text-white/45 shrink-0">Employment</span>
               {lender.accepted_employment_types.map((e) => (
-                <span key={e} className="px-2 py-0.5 rounded bg-white/5 text-white/45">
+                <span key={e} className="px-2 py-0.5 rounded bg-white/5 text-white/60">
                   {e.replace(/_/g, " ")}
                 </span>
               ))}
@@ -199,7 +199,7 @@ function LenderRow({ lender }: { lender: Lender }) {
 
           <div className="flex flex-wrap gap-1.5">
             {lender.specializations.map((s) => (
-              <span key={s} className="text-[11px] px-2 py-0.5 rounded-full border border-white/8 text-white/30">
+              <span key={s} className="text-[11px] px-2 py-0.5 rounded-full border border-white/8 text-white/45">
                 {s}
               </span>
             ))}
@@ -225,11 +225,11 @@ export default function LendersPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">
       <div className="mb-10">
-        <div className="text-xs text-white/30 uppercase tracking-widest mb-3">Our network</div>
+        <div className="text-xs text-white/45 uppercase tracking-widest mb-3">Our network</div>
         <h1 className="text-3xl font-bold tracking-tight mb-2">
           {total} Lenders, Zero Black Boxes
         </h1>
-        <p className="text-white/40 text-sm max-w-lg">
+        <p className="text-white/55 text-sm max-w-lg">
           Every lender is manually researched. Click any name to see credit requirements,
           income thresholds, loan ranges, and who they actually approve.
         </p>
@@ -239,10 +239,10 @@ export default function LendersPage() {
         {GROUPS.map((group) => (
           <div key={group.label} className="border border-white/8 rounded-xl overflow-hidden">
             <div className="px-4 py-2.5 bg-white/[0.02] border-b border-white/8 flex items-center justify-between">
-              <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+              <span className="text-xs font-semibold text-white/65 uppercase tracking-wider">
                 {group.label}
               </span>
-              <span className="text-xs text-white/20">{group.lenders.length}</span>
+              <span className="text-xs text-white/35">{group.lenders.length}</span>
             </div>
             {group.lenders.map((l) => (
               <LenderRow key={l.name} lender={l} />

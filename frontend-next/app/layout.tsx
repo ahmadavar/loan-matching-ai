@@ -50,19 +50,19 @@ export default function RootLayout({
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/chat" className="text-xs text-white/70 hover:text-white transition-colors">
+              <Link href="/chat" className="text-xs text-white/85 hover:text-white transition-colors">
                 AI Chat
               </Link>
-              <Link href="/calculator" className="text-xs text-white/70 hover:text-white transition-colors">
+              <Link href="/calculator" className="text-xs text-white/85 hover:text-white transition-colors">
                 Loan Calculator
               </Link>
-              <Link href="/lenders" className="text-xs text-white/70 hover:text-white transition-colors">
+              <Link href="/lenders" className="text-xs text-white/85 hover:text-white transition-colors">
                 Lenders
               </Link>
-              <Link href="/story" className="text-xs text-white/70 hover:text-white transition-colors">
+              <Link href="/story" className="text-xs text-white/85 hover:text-white transition-colors">
                 Story
               </Link>
-              <Link href="/contact" className="text-xs text-white/70 hover:text-white transition-colors">
+              <Link href="/contact" className="text-xs text-white/85 hover:text-white transition-colors">
                 Contact
               </Link>
               <Link
@@ -94,9 +94,9 @@ export default function RootLayout({
           <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Image src="/logo.png" alt="LoanMatch AI" width={20} height={20} className="rounded-sm opacity-60" />
-              <span className="text-xs text-white/30">LoanMatch AI</span>
+              <span className="text-xs text-white/45">LoanMatch AI</span>
             </div>
-            <p className="text-xs text-white/25">
+            <p className="text-xs text-white/40">
               For informational purposes only. Not financial advice.
             </p>
           </div>

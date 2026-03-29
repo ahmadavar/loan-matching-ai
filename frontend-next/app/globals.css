@@ -119,9 +119,21 @@
   body {
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
+    /* Prevent horizontal overflow — stops mobile viewport from zooming out */
+    overflow-x: hidden;
   }
   html {
     @apply font-sans;
+    /* Stop iOS/Android from auto-scaling text after orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  /* iOS Safari auto-zooms the viewport when focused input has font-size < 16px.
+     This is the #1 cause of "tiny text" on iPhone. Force 16px on mobile. */
+  @media (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px;
+    }
   }
 }
 

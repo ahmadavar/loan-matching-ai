@@ -4,17 +4,17 @@ export default function StoryPage() {
 
       {/* Header */}
       <div className="mb-16">
-        <div className="text-xs text-white/30 uppercase tracking-widest mb-4">The story</div>
+        <div className="text-xs text-white/45 uppercase tracking-widest mb-4">The story</div>
         <h1 className="text-4xl font-bold tracking-tight leading-[1.15] mb-6">
           Why I Built This
         </h1>
-        <p className="text-white/40 text-base leading-relaxed">
+        <p className="text-white/55 text-base leading-relaxed">
           A broken lending system, a pattern I kept seeing from the inside, and a question I couldn&apos;t stop asking.
         </p>
       </div>
 
       {/* Body */}
-      <div className="prose-story space-y-8 text-[15px] leading-[1.85] text-white/65 font-light">
+      <div className="prose-story space-y-8 text-[15px] leading-[1.85] text-white/80 font-light">
 
         <p>
           I&apos;ve worn a lot of hats.
@@ -48,7 +48,7 @@ export default function StoryPage() {
         </p>
 
         <p>
-          The irony is that these borrowers are often <em className="text-white/80 not-italic font-normal">less</em> risky
+          The irony is that these borrowers are often <em className="text-white/90 not-italic font-normal">less</em> risky
           than they appear on paper. They&apos;ve built income resilience the hard way. They
           understand cash flow in a way most salaried employees never have to. They&apos;ve
           survived the gaps, managed the taxes, and kept paying their bills anyway.
@@ -90,7 +90,7 @@ export default function StoryPage() {
 
         <p>
           The goal isn&apos;t to approve everyone. It&apos;s to make sure the people who{" "}
-          <em className="text-white/80 not-italic font-normal">should</em> be approved aren&apos;t
+          <em className="text-white/90 not-italic font-normal">should</em> be approved aren&apos;t
           being turned away because the system wasn&apos;t built with them in mind — and that the
           ones who are approved aren&apos;t paying a penalty for the way they earn.
         </p>
@@ -107,7 +107,7 @@ export default function StoryPage() {
 
         {/* Signature */}
         <div className="pt-8 border-t border-white/8">
-          <p className="text-white/40 text-sm">— Ahmad</p>
+          <p className="text-white/55 text-sm">— Ahmad</p>
         </div>
 
       </div>

@@ -69,7 +69,7 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
     <div className="border border-white/10 rounded-xl overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3">
         <div>
-          <span className="text-xs text-white/30 font-mono mr-2">#{rank}</span>
+          <span className="text-xs text-white/45 font-mono mr-2">#{rank}</span>
           <span className="text-sm font-semibold">{match.lender_name}</span>
           {match.website && (
             <a href={match.website} target="_blank" rel="noopener noreferrer"
@@ -77,7 +77,7 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
           )}
         </div>
         <span className={`text-lg font-bold tabular-nums ${scoreColor(match.score)}`}>
-          {match.score}<span className="text-xs text-white/30 font-normal">/100</span>
+          {match.score}<span className="text-xs text-white/45 font-normal">/100</span>
         </span>
       </div>
       <div className="px-4 pb-2">
@@ -87,16 +87,16 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
         </div>
       </div>
       <button onClick={() => setOpen(!open)}
-        className="w-full px-4 py-2 text-left text-xs text-white/30 hover:text-white/50 border-t border-white/6 flex justify-between transition-colors">
+        className="w-full px-4 py-2 text-left text-xs text-white/45 hover:text-white/65 border-t border-white/6 flex justify-between transition-colors">
         <span>Breakdown</span><span>{open ? "▲" : "▼"}</span>
       </button>
       {open && (
         <div className="px-4 py-3 border-t border-white/6 space-y-1.5">
           {Object.entries(match.breakdown).map(([dim, d]) => (
             <div key={dim} className="flex justify-between text-xs">
-              <span className="text-white/40 capitalize">{dim.replace(/_/g, " ")}</span>
-              <span className="text-white/30 text-right max-w-[60%] leading-snug">
-                {d.note} <span className="font-mono text-white/40">{d.points}pt</span>
+              <span className="text-white/55 capitalize">{dim.replace(/_/g, " ")}</span>
+              <span className="text-white/45 text-right max-w-[60%] leading-snug">
+                {d.note} <span className="font-mono text-white/55">{d.points}pt</span>
               </span>
             </div>
           ))}
@@ -179,7 +179,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-56px)]">
+    <div className="flex h-[calc(100dvh-56px)]">
 
       {/* ── Left: Chat ── */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -194,14 +194,14 @@ export default function ChatPage() {
                 <span className="text-[#38bdf8] text-lg">✦</span>
               </div>
               <h2 className="text-lg font-semibold mb-2">Tell me your situation</h2>
-              <p className="text-sm text-white/65 mb-8 leading-relaxed">
+              <p className="text-sm text-white/80 mb-8 leading-relaxed">
                 Describe your income, credit, and what you need the loan for.
                 I&apos;ll find your best lender matches.
               </p>
               <div className="space-y-2">
                 {EXAMPLES.map((ex) => (
                   <button key={ex} onClick={() => send(ex)}
-                    className="w-full text-left text-xs text-white/70 px-4 py-3 rounded-xl border border-white/8 hover:border-[#38bdf8]/30 hover:text-white transition-all leading-snug">
+                    className="w-full text-left text-xs text-white/85 px-4 py-3 rounded-xl border border-white/8 hover:border-[#38bdf8]/30 hover:text-white transition-all leading-snug">
                     {ex}
                   </button>
                 ))}
@@ -250,7 +250,7 @@ export default function ChatPage() {
           {/* Match results inline */}
           {done && matches.length > 0 && (
             <div className="max-w-xl mx-auto w-full mt-4 space-y-3">
-              <div className="text-xs text-white/30 uppercase tracking-widest text-center mb-4">
+              <div className="text-xs text-white/45 uppercase tracking-widest text-center mb-4">
                 Your top {matches.length} matches
               </div>
               {matches.map((m, i) => (
@@ -258,7 +258,7 @@ export default function ChatPage() {
               ))}
               <div className="text-center mt-6">
                 <button onClick={reset}
-                  className="text-xs text-white/30 hover:text-white/60 border border-white/8 rounded-full px-4 py-2 transition-colors">
+                  className="text-xs text-white/45 hover:text-white/75 border border-white/8 rounded-full px-4 py-2 transition-colors">
                   ↺ Start a new search
                 </button>
               </div>
@@ -278,7 +278,7 @@ export default function ChatPage() {
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input); } }}
                 placeholder="Describe your situation or answer the question above…"
                 rows={1}
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#38bdf8]/40 resize-none leading-relaxed"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#38bdf8]/40 resize-none leading-relaxed"
               />
               <button
                 onClick={() => send(input)}
@@ -288,18 +288,18 @@ export default function ChatPage() {
                 Send
               </button>
             </div>
-            <p className="text-center text-xs text-white/20 mt-2">Enter to send · Shift+Enter for new line</p>
+            <p className="text-center text-xs text-white/35 mt-2">Enter to send · Shift+Enter for new line</p>
           </div>
         )}
       </div>
 
       {/* ── Right: Profile Tracker (desktop only) ── */}
       <div className="hidden lg:flex w-64 border-l border-white/8 flex-col p-5 shrink-0">
-        <div className="text-xs text-white/30 uppercase tracking-widest mb-4">Profile collected</div>
+        <div className="text-xs text-white/45 uppercase tracking-widest mb-4">Profile collected</div>
 
         {/* Progress bar */}
         <div className="mb-5">
-          <div className="flex justify-between text-xs text-white/30 mb-1.5">
+          <div className="flex justify-between text-xs text-white/45 mb-1.5">
             <span>{filledCount} of {PROFILE_LABELS.length} fields</span>
             <span>{Math.round((filledCount / PROFILE_LABELS.length) * 100)}%</span>
           </div>
@@ -315,14 +315,14 @@ export default function ChatPage() {
             const val = profile[key];
             const filled = val != null;
             return (
-              <div key={key} className={`flex items-center justify-between py-2 border-b border-white/5 text-xs transition-colors ${filled ? "text-white/70" : "text-white/20"}`}>
+              <div key={key} className={`flex items-center justify-between py-2 border-b border-white/5 text-xs transition-colors ${filled ? "text-white/85" : "text-white/35"}`}>
                 <span className="flex items-center gap-2">
                   <span className={filled ? "text-[#38bdf8]" : "text-white/15"}>
                     {filled ? "✓" : "○"}
                   </span>
                   {label}
                 </span>
-                <span className={`font-mono ${filled ? "text-white/60" : "text-white/15"}`}>
+                <span className={`font-mono ${filled ? "text-white/75" : "text-white/15"}`}>
                   {filled ? format(val) : "—"}
                 </span>
               </div>

@@ -77,7 +77,7 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
-          <span className="text-xs text-white/30 font-mono w-5">#{rank}</span>
+          <span className="text-xs text-white/45 font-mono w-5">#{rank}</span>
           <div>
             <div className="text-sm font-semibold">{match.lender_name}</div>
             {match.website && (
@@ -95,7 +95,7 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
         <div className="flex items-center gap-3">
           <span className={`text-xl font-bold tabular-nums ${scoreColor(match.score)}`}>
             {match.score}
-            <span className="text-xs text-white/30 font-normal">/100</span>
+            <span className="text-xs text-white/45 font-normal">/100</span>
           </span>
         </div>
       </div>
@@ -113,7 +113,7 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
       {/* Expand toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full px-5 py-2.5 text-left text-xs text-white/35 hover:text-white/60 border-t border-white/6 transition-colors flex items-center justify-between"
+        className="w-full px-5 py-2.5 text-left text-xs text-white/50 hover:text-white/75 border-t border-white/6 transition-colors flex items-center justify-between"
       >
         <span>Score breakdown</span>
         <span>{open ? "▲" : "▼"}</span>
@@ -123,13 +123,13 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
         <div className="px-5 py-4 border-t border-white/6 space-y-2">
           {dims.map(([dim, detail]) => (
             <div key={dim} className="flex items-start justify-between gap-4 text-xs">
-              <span className="flex items-center gap-2 text-white/50">
+              <span className="flex items-center gap-2 text-white/65">
                 <span>{dimIcon(detail.points)}</span>
                 <span className="capitalize">{dim.replace(/_/g, " ")}</span>
               </span>
-              <span className="text-right text-white/35 max-w-[55%] leading-snug">
+              <span className="text-right text-white/50 max-w-[55%] leading-snug">
                 {detail.note}
-                <span className="ml-2 font-mono text-white/50">{detail.points}pt</span>
+                <span className="ml-2 font-mono text-white/65">{detail.points}pt</span>
               </span>
             </div>
           ))}
@@ -200,9 +200,9 @@ export default function MatchPage() {
     <div className="max-w-4xl mx-auto px-6 py-16">
       {/* Header */}
       <div className="mb-10">
-        <div className="text-xs text-white/30 uppercase tracking-widest mb-3">Loan matching</div>
+        <div className="text-xs text-white/45 uppercase tracking-widest mb-3">Loan matching</div>
         <h1 className="text-3xl font-bold mb-2">Find your best lenders</h1>
-        <p className="text-sm text-white/45">
+        <p className="text-sm text-white/60">
           Fill in your details for a full dimension-by-dimension breakdown across 52+ lenders.
           No credit pull. No signup.
         </p>
@@ -213,23 +213,23 @@ export default function MatchPage() {
         <div className="grid sm:grid-cols-2 gap-5 mb-8">
           {/* Loan Amount */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Loan Amount ($)</Label>
+            <Label className="text-xs text-white/65">Loan Amount ($)</Label>
             <Input
               type="number"
               min={1000}
               value={form.loan_amount_needed}
               onChange={(e) => set("loan_amount_needed", Number(e.target.value))}
-              className="bg-white/4 border-white/10 text-white placeholder:text-white/20 focus:border-[#38bdf8]/50"
+              className="bg-white/4 border-white/10 text-white placeholder:text-white/35 focus:border-[#38bdf8]/50"
             />
           </div>
 
           {/* Loan Purpose */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Loan Purpose</Label>
+            <Label className="text-xs text-white/65">Loan Purpose</Label>
             <select
               value={form.loan_purpose}
               onChange={(e) => set("loan_purpose", e.target.value)}
-              className="w-full h-8 rounded-lg border border-white/10 bg-white/4 px-2.5 text-sm text-white focus:outline-none focus:border-[#38bdf8]/50"
+              className="w-full h-10 rounded-lg border border-white/10 bg-white/4 px-2.5 text-sm text-white focus:outline-none focus:border-[#38bdf8]/50"
             >
               {PURPOSE_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value} className="bg-zinc-900">
@@ -241,7 +241,7 @@ export default function MatchPage() {
 
           {/* Credit Score */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">
+            <Label className="text-xs text-white/65">
               Credit Score
               <span className="ml-2 text-[#38bdf8]">{form.credit_score}</span>
             </Label>
@@ -253,34 +253,34 @@ export default function MatchPage() {
               onChange={(e) => set("credit_score", Number(e.target.value))}
               className="w-full accent-[#38bdf8]"
             />
-            <div className="flex justify-between text-xs text-white/25">
+            <div className="flex justify-between text-xs text-white/40">
               <span>300 — Poor</span>
-              <span>580 — Fair</span>
-              <span>700 — Good</span>
+              <span className="hidden sm:block">580 — Fair</span>
+              <span className="hidden sm:block">700 — Good</span>
               <span>850 — Excellent</span>
             </div>
           </div>
 
           {/* Annual Income */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Annual Income ($)</Label>
+            <Label className="text-xs text-white/65">Annual Income ($)</Label>
             <Input
               type="number"
               min={0}
               step={1000}
               value={form.annual_income}
               onChange={(e) => set("annual_income", Number(e.target.value))}
-              className="bg-white/4 border-white/10 text-white placeholder:text-white/20 focus:border-[#38bdf8]/50"
+              className="bg-white/4 border-white/10 text-white placeholder:text-white/35 focus:border-[#38bdf8]/50"
             />
           </div>
 
           {/* Employment Type */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Employment Type</Label>
+            <Label className="text-xs text-white/65">Employment Type</Label>
             <select
               value={form.employment_type}
               onChange={(e) => set("employment_type", e.target.value)}
-              className="w-full h-8 rounded-lg border border-white/10 bg-white/4 px-2.5 text-sm text-white focus:outline-none focus:border-[#38bdf8]/50"
+              className="w-full h-10 rounded-lg border border-white/10 bg-white/4 px-2.5 text-sm text-white focus:outline-none focus:border-[#38bdf8]/50"
             >
               {EMPLOYMENT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value} className="bg-zinc-900">
@@ -292,40 +292,40 @@ export default function MatchPage() {
 
           {/* Years at Job */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Years at Current Job / Line of Work</Label>
+            <Label className="text-xs text-white/65">Years at Current Job / Line of Work</Label>
             <Input
               type="number"
               min={0}
               step={0.5}
               value={form.years_at_current_work}
               onChange={(e) => set("years_at_current_work", Number(e.target.value))}
-              className="bg-white/4 border-white/10 text-white placeholder:text-white/20 focus:border-[#38bdf8]/50"
+              className="bg-white/4 border-white/10 text-white placeholder:text-white/35 focus:border-[#38bdf8]/50"
             />
           </div>
 
           {/* Total Assets */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Total Assets ($) — savings, investments, property</Label>
+            <Label className="text-xs text-white/65">Total Assets ($) — savings, investments, property</Label>
             <Input
               type="number"
               min={0}
               step={1000}
               value={form.total_assets}
               onChange={(e) => set("total_assets", Number(e.target.value))}
-              className="bg-white/4 border-white/10 text-white placeholder:text-white/20 focus:border-[#38bdf8]/50"
+              className="bg-white/4 border-white/10 text-white placeholder:text-white/35 focus:border-[#38bdf8]/50"
             />
           </div>
 
           {/* Monthly Debt */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-white/50">Monthly Debt Payments ($) — cards, car, student loans</Label>
+            <Label className="text-xs text-white/65">Monthly Debt Payments ($) — cards, car, student loans</Label>
             <Input
               type="number"
               min={0}
               step={50}
               value={form.monthly_debt_payments}
               onChange={(e) => set("monthly_debt_payments", Number(e.target.value))}
-              className="bg-white/4 border-white/10 text-white placeholder:text-white/20 focus:border-[#38bdf8]/50"
+              className="bg-white/4 border-white/10 text-white placeholder:text-white/35 focus:border-[#38bdf8]/50"
             />
           </div>
         </div>
@@ -340,7 +340,7 @@ export default function MatchPage() {
               className={`w-4 h-4 mt-0.5 rounded-full bg-white shadow transition-transform ${form.income_stable ? "translate-x-4.5" : "translate-x-0.5"}`}
             />
           </div>
-          <span className="text-xs text-white/50 group-hover:text-white/70 transition-colors">
+          <span className="text-xs text-white/65 group-hover:text-white/85 transition-colors">
             My income has been consistent for 2+ years
           </span>
         </label>
@@ -383,7 +383,7 @@ export default function MatchPage() {
                   AI Advisor Summary
                 </span>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed whitespace-pre-line">
+              <p className="text-sm text-white/85 leading-relaxed whitespace-pre-line">
                 {cleanText(matches[0].explanation ?? "")}
               </p>
             </div>
@@ -394,7 +394,7 @@ export default function MatchPage() {
             <h2 className="text-lg font-semibold">
               Your top {matches.length} matches
             </h2>
-            <span className="text-xs text-white/30 border border-white/8 rounded-full px-3 py-1">
+            <span className="text-xs text-white/45 border border-white/8 rounded-full px-3 py-1">
               from 52+ lenders
             </span>
           </div>
@@ -409,13 +409,13 @@ export default function MatchPage() {
           <div className="mt-8 flex justify-center">
             <button
               onClick={() => { setMatches([]); setDone(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-              className="text-xs text-white/30 hover:text-white/60 transition-colors border border-white/8 rounded-full px-4 py-2"
+              className="text-xs text-white/45 hover:text-white/75 transition-colors border border-white/8 rounded-full px-4 py-2"
             >
               ↑ Adjust and search again
             </button>
           </div>
 
-          <p className="mt-4 text-xs text-white/20 text-center">
+          <p className="mt-4 text-xs text-white/35 text-center">
             For informational purposes only. Not financial advice. No credit pull was performed.
           </p>
         </div>

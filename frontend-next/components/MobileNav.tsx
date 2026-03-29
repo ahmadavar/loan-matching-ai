@@ -36,7 +36,7 @@ export default function MobileNav() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="block px-6 py-3 text-sm text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors"
+              className="block px-6 py-3 text-sm text-white/75 hover:text-white hover:bg-white/[0.03] transition-colors"
             >
               {l.label}
             </Link>
