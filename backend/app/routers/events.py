@@ -23,6 +23,10 @@ def log_event(payload: EventPayload, db: Session = Depends(get_db)):
         session_id=payload.session_id,
         event_meta=payload.metadata,
     )
-    db.add(event)
-    db.commit()
+    try:
+        db.add(event)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[events] DB write failed: {e}")
     return {"ok": True}

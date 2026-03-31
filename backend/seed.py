@@ -15,18 +15,25 @@ def seed():
 
     db = SessionLocal()
 
-    # Clear existing lenders
-    db.query(Lender).delete()
-    db.commit()
+    # Skip seeding if lenders already exist (idempotent)
+    existing = db.query(Lender).count()
+    if existing > 0:
+        print(f"Lenders already seeded ({existing} records). Skipping.")
+        db.close()
+        return
 
-    # Insert all lenders
-    for data in LENDERS:
-        lender = Lender(**{k: v for k, v in data.items()})
-        db.add(lender)
-
-    db.commit()
-    db.close()
-    print(f"Seeded {len(LENDERS)} lenders successfully.")
+    try:
+        for data in LENDERS:
+            lender = Lender(**{k: v for k, v in data.items()})
+            db.add(lender)
+        db.commit()
+        print(f"Seeded {len(LENDERS)} lenders successfully.")
+    except Exception as e:
+        db.rollback()
+        print(f"Seeding failed: {e}")
+        raise
+    finally:
+        db.close()
 
 
 if __name__ == "__main__":

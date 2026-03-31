@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, JSON, DateTime, Boolean
+from sqlalchemy import Column, Index, Integer, String, Float, JSON, DateTime, Boolean
 from sqlalchemy.sql import func
 from backend.app.models.lender import Base
 
@@ -34,3 +34,8 @@ class MatchResult(Base):
 
     # Full match details
     matches_json = Column(JSON)
+
+    __table_args__ = (
+        Index("ix_match_results_created_at", "created_at"),
+        Index("ix_match_results_employment_type", "employment_type"),
+    )

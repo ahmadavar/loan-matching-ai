@@ -64,8 +64,9 @@ async def chat(request: Request, body: ChatRequest, db: Session = Depends(get_db
             )
             db.add(row)
             db.commit()
-        except Exception:
-            db.rollback()  # Never let logging break the response
+        except Exception as e:
+            db.rollback()
+            print(f"[chat] MatchResult DB write failed: {e}")
 
     return ChatResponse(
         reply=result["reply"],

@@ -23,6 +23,11 @@ def submit_contact(form: ContactForm, db: Session = Depends(get_db)):
         email=form.email.lower().strip(),
         message=form.message.strip(),
     )
-    db.add(record)
-    db.commit()
+    try:
+        db.add(record)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[contact] DB write failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to save message. Please try again.")
     return {"success": True, "message": "Thanks! We'll get back to you shortly."}

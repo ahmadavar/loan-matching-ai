@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Index, Integer, String, Text, DateTime
 from sqlalchemy.sql import func
 from backend.app.models.lender import Base
 
@@ -12,3 +12,8 @@ class ContactRequest(Base):
     email = Column(String, nullable=False)
     message = Column(Text, nullable=False)
     status = Column(String, default="new")  # new / read / replied
+
+    __table_args__ = (
+        Index("ix_contact_requests_created_at", "created_at"),
+        Index("ix_contact_requests_status", "status"),
+    )
