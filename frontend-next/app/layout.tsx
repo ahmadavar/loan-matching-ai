@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.loanmatchai.app",
   },
+  verification: {
+    google: "1yl8W5L0xyOcBkTLD6ZGroMuB-ALG9r1bFoWpe1nw4s",
+  },
   other: {
     "fo-verify": "28d92d70-4f44-4009-80b3-0c617dcd78d3",
   },
