@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "LoanMatch AI — Smart Lending for Everyone",
   description:
     "AI-powered loan matching for gig workers, freelancers, and self-employed professionals. Find your best loan options in seconds.",
+  other: {
+    "fo-verify": "28d92d70-4f44-4009-80b3-0c617dcd78d3",
+  },
 };
 
 export const viewport: Viewport = {
