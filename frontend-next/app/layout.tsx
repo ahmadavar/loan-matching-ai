@@ -19,6 +19,24 @@ export const metadata: Metadata = {
   title: "LoanMatch AI — Smart Lending for Everyone",
   description:
     "AI-powered loan matching for gig workers, freelancers, and self-employed professionals. Find your best loan options in seconds.",
+  metadataBase: new URL("https://www.loanmatchai.app"),
+  openGraph: {
+    title: "LoanMatch AI — Smart Lending for Everyone",
+    description:
+      "AI-powered loan matching for gig workers, freelancers, and self-employed professionals. Find your best loan options in seconds.",
+    url: "https://www.loanmatchai.app",
+    siteName: "LoanMatch AI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LoanMatch AI — Smart Lending for Everyone",
+    description:
+      "AI-powered loan matching for gig workers, freelancers, and self-employed professionals. Find your best loan options in seconds.",
+  },
+  alternates: {
+    canonical: "https://www.loanmatchai.app",
+  },
   other: {
     "fo-verify": "28d92d70-4f44-4009-80b3-0c617dcd78d3",
   },
