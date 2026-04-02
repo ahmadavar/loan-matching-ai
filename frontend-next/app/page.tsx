@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Users, BrainCircuit, MessageSquare, ShieldCheck } from "lucide-react";
+import PageTracker from "@/components/PageTracker";
 
 const stats = [
   { value: "52+", label: "Lender profiles" },
@@ -37,6 +38,7 @@ const personas = [
 export default function Home() {
   return (
     <div className="relative">
+      <PageTracker page="/" />
       {/* Dot grid background on hero */}
       <div className="absolute inset-0 h-[680px] dot-grid pointer-events-none" />
 

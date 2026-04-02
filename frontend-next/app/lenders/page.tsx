@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { track } from "@/lib/track";
 
 interface Lender {
   name: string;
@@ -221,6 +222,8 @@ function LenderRow({ lender }: { lender: Lender }) {
 
 export default function LendersPage() {
   const total = GROUPS.reduce((sum, g) => sum + g.lenders.length, 0);
+
+  useEffect(() => { track("page_view", "/lenders"); }, []);
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">

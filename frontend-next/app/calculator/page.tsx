@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { track } from "@/lib/track";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 interface LoanInput {
@@ -53,8 +54,19 @@ const PieTooltip = ({
 
 export default function CalculatorPage() {
   const [loan, setLoan] = useState<LoanInput>({ amount: "", apr: "", term: "" });
+  const trackedRef = useRef(false);
 
   const result = useMemo(() => calcLoan(loan), [loan]);
+
+  useEffect(() => { track("page_view", "/calculator"); }, []);
+
+  // Track calculator_used once per session when a valid result is computed
+  useEffect(() => {
+    if (result && !trackedRef.current) {
+      trackedRef.current = true;
+      track("calculator_used", "/calculator", { loan_amount: result.principal, term_years: loan.term });
+    }
+  }, [result, loan.term]);
 
   const pieData = result
     ? [
