@@ -139,7 +139,91 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
     breakdown["loan_purpose"] = {"points": 10, "note": "Loan purpose supported"}
     total += 10
 
+    # --- BONUS DIMENSIONS (up to +30 points) ---
+    # These represent verifiable alternative data that reduces lender uncertainty
+    # for gig workers and self-employed borrowers. Regulatory basis:
+    #   D7: Fannie Mae 2-year self-employment guideline
+    #   D8: Experian Boost precedent + CFPB alternative data guidance
+    #   D9: Business underwriting concentration risk — applied to individuals
+
+    # 7. Income Continuity — consistent self-employment over time (+10 points)
+    # Measures: how many consecutive months of documented 1099/gig income
+    income_months = borrower.get("income_continuity_months", 0)
+    if emp_type in ["self_employed", "gig", "contractor"]:
+        if income_months >= 24:
+            breakdown["income_continuity"] = {"points": 10, "note": f"{income_months} months continuous gig income — meets 2-year standard"}
+            total += 10
+        elif income_months >= 12:
+            pts = 6
+            breakdown["income_continuity"] = {"points": pts, "note": f"{income_months} months continuous income — approaching 2-year standard"}
+            total += pts
+        elif income_months >= 6:
+            pts = 3
+            breakdown["income_continuity"] = {"points": pts, "note": f"{income_months} months income history — limited continuity"}
+            total += pts
+        else:
+            breakdown["income_continuity"] = {"points": 0, "note": "Less than 6 months income history — high uncertainty"}
+    else:
+        # Salaried borrowers get full credit — employer verifies continuity
+        breakdown["income_continuity"] = {"points": 10, "note": "Salaried — employer verifies income continuity"}
+        total += 10
+
+    # 8. Payment Behavior Outside Credit Bureau (+10 points)
+    # Measures: on-time payment score for utilities, rent, subscriptions (0–100)
+    # Captures creditworthy behavior invisible to traditional bureaus
+    payment_score = borrower.get("payment_behavior_score", None)
+    if payment_score is not None:
+        if payment_score >= 90:
+            breakdown["payment_behavior"] = {"points": 10, "note": f"Excellent off-bureau payment history ({payment_score}/100)"}
+            total += 10
+        elif payment_score >= 75:
+            pts = 7
+            breakdown["payment_behavior"] = {"points": pts, "note": f"Good off-bureau payment history ({payment_score}/100)"}
+            total += pts
+        elif payment_score >= 60:
+            pts = 4
+            breakdown["payment_behavior"] = {"points": pts, "note": f"Mixed off-bureau payment history ({payment_score}/100)"}
+            total += pts
+        else:
+            breakdown["payment_behavior"] = {"points": 0, "note": f"Poor off-bureau payment history ({payment_score}/100)"}
+    else:
+        breakdown["payment_behavior"] = {"points": 0, "note": "No payment behavior data provided — submit utility/rent history to improve score"}
+
+    # 9. Income Diversity — number of distinct income sources (+10 points)
+    # Measures: how many separate clients/platforms generate income
+    # More sources = less concentration risk = more resilient income
+    income_sources = borrower.get("income_source_count", 1)
+    if emp_type in ["self_employed", "gig", "contractor"]:
+        if income_sources >= 5:
+            breakdown["income_diversity"] = {"points": 10, "note": f"{income_sources} income sources — highly diversified, low concentration risk"}
+            total += 10
+        elif income_sources >= 3:
+            pts = 7
+            breakdown["income_diversity"] = {"points": pts, "note": f"{income_sources} income sources — diversified"}
+            total += pts
+        elif income_sources == 2:
+            pts = 4
+            breakdown["income_diversity"] = {"points": pts, "note": "2 income sources — some diversification"}
+            total += pts
+        else:
+            breakdown["income_diversity"] = {"points": 0, "note": "Single income source — concentration risk"}
+    else:
+        # Salaried: single employer is normal, not a risk flag
+        breakdown["income_diversity"] = {"points": 7, "note": "Salaried — single employer income is standard"}
+        total += 7
+
     return round(total, 2), breakdown
+
+
+def estimate_apr(score: float, apr_min: float, apr_max: float, max_score: float = 130.0) -> float:
+    """
+    Estimate a borrower's APR within a lender's real rate range based on their score.
+    Higher score = closer to apr_min. Lower score = closer to apr_max.
+    """
+    if apr_min is None or apr_max is None:
+        return None
+    ratio = 1.0 - (min(score, max_score) / max_score)
+    return round(apr_min + ratio * (apr_max - apr_min), 2)
 
 
 def find_matches(borrower: Dict, lenders: List[Dict], top_k: int = 5) -> List[Dict]:
@@ -154,7 +238,11 @@ def find_matches(borrower: Dict, lenders: List[Dict], top_k: int = 5) -> List[Di
             results.append({
                 "lender": lender,
                 "score": score,
-                "breakdown": breakdown
+                "breakdown": breakdown,
+                "estimated_apr": estimate_apr(score, lender.get("apr_min"), lender.get("apr_max")),
+                "apr_min": lender.get("apr_min"),
+                "apr_max": lender.get("apr_max"),
+                "apr_source": lender.get("apr_source", "synthetic"),
             })
 
     results.sort(key=lambda x: x["score"], reverse=True)

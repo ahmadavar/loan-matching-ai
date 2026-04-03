@@ -28,6 +28,10 @@ interface Match {
   website?: string;
   breakdown: Breakdown;
   explanation?: string;
+  apr_min?: number;
+  apr_max?: number;
+  estimated_apr?: number;
+  apr_source?: string;
 }
 
 const EMPLOYMENT_OPTIONS = [
@@ -67,10 +71,18 @@ function dimIcon(pts: number) {
   return "✅";
 }
 
-function MatchCard({ match, rank }: { match: Match; rank: number }) {
-  const [open, setOpen] = useState(rank === 1); // top match open by default
+function aprColor(apr: number) {
+  if (apr <= 12) return "text-emerald-400";
+  if (apr <= 20) return "text-amber-400";
+  return "text-red-400";
+}
+
+function MatchCard({ match, rank, simulatedApr }: { match: Match; rank: number; simulatedApr?: number }) {
+  const [open, setOpen] = useState(rank === 1);
   const dims = Object.entries(match.breakdown);
-  const maxPts = { credit_score: 20, income: 20, employment: 20, dti: 15, assets: 15, loan_purpose: 10 } as Record<string, number>;
+  const scoreOutOf130 = match.score;
+  const scorePercent = Math.min((scoreOutOf130 / 130) * 100, 100);
+  const displayApr = simulatedApr ?? match.estimated_apr;
 
   return (
     <div className="border border-white/8 rounded-xl overflow-hidden hover:border-white/15 transition-colors">
@@ -81,21 +93,29 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
           <div>
             <div className="text-sm font-semibold">{match.lender_name}</div>
             {match.website && (
-              <a
-                href={match.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-[#38bdf8] hover:underline"
-              >
+              <a href={match.website} target="_blank" rel="noopener noreferrer"
+                className="text-xs text-[#38bdf8] hover:underline">
                 Visit lender →
               </a>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className={`text-xl font-bold tabular-nums ${scoreColor(match.score)}`}>
-            {match.score}
-            <span className="text-xs text-white/45 font-normal">/100</span>
+        <div className="flex items-center gap-4">
+          {/* APR display */}
+          {displayApr != null && match.apr_min != null && (
+            <div className="text-right">
+              <div className={`text-xl font-bold tabular-nums ${aprColor(displayApr)}`}>
+                {displayApr.toFixed(2)}%
+                <span className="text-xs text-white/45 font-normal ml-0.5">APR est.</span>
+              </div>
+              <div className="text-xs text-white/35 tabular-nums">
+                range {match.apr_min}%–{match.apr_max}%
+              </div>
+            </div>
+          )}
+          <span className={`text-sm font-bold tabular-nums ${scoreColor(scoreOutOf130)}`}>
+            {scoreOutOf130}
+            <span className="text-xs text-white/45 font-normal">/130</span>
           </span>
         </div>
       </div>
@@ -104,8 +124,8 @@ function MatchCard({ match, rank }: { match: Match; rank: number }) {
       <div className="px-5 pb-3">
         <div className="h-1 rounded-full bg-white/8 overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-700 ${scoreBg(match.score)}`}
-            style={{ width: `${match.score}%` }}
+            className={`h-full rounded-full transition-all duration-700 ${scoreBg(scoreOutOf130)}`}
+            style={{ width: `${scorePercent}%` }}
           />
         </div>
       </div>
@@ -150,7 +170,44 @@ export default function MatchPage() {
     total_assets: 50000,
     monthly_debt_payments: 500,
     income_stable: true,
+    // Bonus dimensions
+    income_continuity_months: 0,
+    payment_behavior_score: null as number | null,
+    income_source_count: 1,
   });
+
+  // Local APR simulator — recalculates without API call
+  function simulateApr(match: Match, bonusScore: number): number | undefined {
+    if (match.apr_min == null || match.apr_max == null) return undefined;
+    const baseScore = match.score - (match.breakdown.income_continuity?.points ?? 0)
+      - (match.breakdown.payment_behavior?.points ?? 0)
+      - (match.breakdown.income_diversity?.points ?? 0);
+    const newScore = Math.min(baseScore + bonusScore, 130);
+    return Math.round((match.apr_min + (1 - newScore / 130) * (match.apr_max - match.apr_min)) * 100) / 100;
+  }
+
+  const isGig = ["gig", "self_employed", "contractor"].includes(form.employment_type);
+
+  // Calculate current bonus score from sliders
+  function currentBonusScore(): number {
+    let pts = 0;
+    if (isGig) {
+      if (form.income_continuity_months >= 24) pts += 10;
+      else if (form.income_continuity_months >= 12) pts += 6;
+      else if (form.income_continuity_months >= 6) pts += 3;
+
+      if (form.payment_behavior_score != null) {
+        if (form.payment_behavior_score >= 90) pts += 10;
+        else if (form.payment_behavior_score >= 75) pts += 7;
+        else if (form.payment_behavior_score >= 60) pts += 4;
+      }
+
+      if (form.income_source_count >= 5) pts += 10;
+      else if (form.income_source_count >= 3) pts += 7;
+      else if (form.income_source_count === 2) pts += 4;
+    }
+    return pts;
+  }
 
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(false);
@@ -330,6 +387,65 @@ export default function MatchPage() {
           </div>
         </div>
 
+        {/* Bonus dimensions — gig/self-employed only */}
+        {isGig && (
+          <div className="mb-8 rounded-xl border border-[#38bdf8]/20 bg-[#38bdf8]/5 p-5 space-y-5">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[#38bdf8] text-sm">⚡</span>
+              <span className="text-xs font-semibold text-[#38bdf8] uppercase tracking-wider">
+                Reduce your rate — add verified gig data
+              </span>
+            </div>
+            <p className="text-xs text-white/50 -mt-2">
+              These 3 dimensions can lower your estimated APR by proving your actual risk is lower than your credit score suggests.
+            </p>
+
+            {/* D7 — Income continuity */}
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/65">
+                Months of continuous 1099 / gig income
+                <span className="ml-2 text-[#38bdf8]">{form.income_continuity_months} mo</span>
+                {form.income_continuity_months >= 24 && <span className="ml-2 text-emerald-400">✓ 2-year standard met</span>}
+              </Label>
+              <input type="range" min={0} max={60} value={form.income_continuity_months}
+                onChange={(e) => set("income_continuity_months", Number(e.target.value))}
+                className="w-full accent-[#38bdf8]" />
+              <div className="flex justify-between text-xs text-white/35">
+                <span>0 mo</span><span>12 mo</span><span>24 mo ✓</span><span>36 mo</span><span>60 mo</span>
+              </div>
+            </div>
+
+            {/* D8 — Payment behavior */}
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/65">
+                Off-bureau payment score — utilities, rent, subscriptions (0–100)
+                <span className="ml-2 text-[#38bdf8]">{form.payment_behavior_score ?? "not set"}</span>
+              </Label>
+              <input type="range" min={0} max={100}
+                value={form.payment_behavior_score ?? 0}
+                onChange={(e) => set("payment_behavior_score", Number(e.target.value))}
+                className="w-full accent-[#38bdf8]" />
+              <div className="flex justify-between text-xs text-white/35">
+                <span>0 — poor</span><span>60</span><span>75</span><span>90+ ✓</span>
+              </div>
+            </div>
+
+            {/* D9 — Income diversity */}
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/65">
+                Number of distinct income sources (clients / platforms)
+                <span className="ml-2 text-[#38bdf8]">{form.income_source_count}</span>
+              </Label>
+              <input type="range" min={1} max={10} value={form.income_source_count}
+                onChange={(e) => set("income_source_count", Number(e.target.value))}
+                className="w-full accent-[#38bdf8]" />
+              <div className="flex justify-between text-xs text-white/35">
+                <span>1 — single</span><span>3</span><span>5+ ✓</span><span>10</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Income stable toggle */}
         <label className="flex items-center gap-3 mb-8 cursor-pointer group">
           <div
@@ -399,9 +515,48 @@ export default function MatchPage() {
             </span>
           </div>
 
+          {/* Live simulator panel — gig workers only */}
+          {isGig && matches.some(m => m.apr_min != null) && (
+            <div className="mb-6 rounded-xl border border-purple-500/20 bg-purple-500/5 p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-purple-400 text-sm">◈</span>
+                <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider">
+                  Risk Simulator — live APR preview
+                </span>
+              </div>
+              <p className="text-xs text-white/50 mb-4">
+                Adjust the gig data sliders above to see your estimated APR update in real time.
+              </p>
+              <div className="space-y-2">
+                {matches.filter(m => m.apr_min != null).slice(0, 3).map(m => {
+                  const original = m.estimated_apr;
+                  const simulated = simulateApr(m, currentBonusScore());
+                  const saved = original != null && simulated != null ? Math.round((original - simulated) * 100) / 100 : 0;
+                  return (
+                    <div key={m.lender_name} className="flex items-center justify-between text-xs">
+                      <span className="text-white/65 w-40 truncate">{m.lender_name}</span>
+                      <div className="flex items-center gap-3">
+                        {original != null && (
+                          <span className="text-white/35 line-through tabular-nums">{original.toFixed(2)}%</span>
+                        )}
+                        {simulated != null && (
+                          <span className={`font-bold tabular-nums ${aprColor(simulated)}`}>{simulated.toFixed(2)}%</span>
+                        )}
+                        {saved > 0 && (
+                          <span className="text-emerald-400 tabular-nums">−{saved.toFixed(2)}%</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-3">
             {matches.map((m, i) => (
-              <MatchCard key={m.lender_name} match={m} rank={i + 1} />
+              <MatchCard key={m.lender_name} match={m} rank={i + 1}
+                simulatedApr={isGig ? simulateApr(m, currentBonusScore()) : undefined} />
             ))}
           </div>
 

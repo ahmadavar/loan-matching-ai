@@ -5,7 +5,8 @@ Usage: python -m app.services.embed_lenders
 import os
 import psycopg2
 from sentence_transformers import SentenceTransformer
-from app.data.lenders import LENDERS
+from app.data.loader import get_lenders
+LENDERS = get_lenders()
 from dotenv import load_dotenv
 
 load_dotenv()

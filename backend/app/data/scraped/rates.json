@@ -1,0 +1,366 @@
+[
+  {
+    "name": "SoFi",
+    "apr_min": 8.99,
+    "apr_max": 29.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.sofi.com/personal-loans/rates/"
+  },
+  {
+    "name": "LightStream",
+    "apr_min": 7.49,
+    "apr_max": 25.49,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.lightstream.com/personal-loan-rates"
+  },
+  {
+    "name": "Upstart",
+    "apr_min": 7.8,
+    "apr_max": 35.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.upstart.com/personal-loans"
+  },
+  {
+    "name": "LendingClub",
+    "apr_min": 9.57,
+    "apr_max": 35.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.lendingclub.com/personal-loan/rates-fees"
+  },
+  {
+    "name": "Prosper",
+    "apr_min": 8.99,
+    "apr_max": 35.99,
+    "apr_source": "scraped",
+    "scraped_url": "https://www.prosper.com/personal-loans"
+  },
+  {
+    "name": "Discover Personal Loans",
+    "apr_min": 7.99,
+    "apr_max": 24.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.discover.com/personal-loans/rates.html"
+  },
+  {
+    "name": "Marcus by Goldman Sachs",
+    "apr_min": 6.99,
+    "apr_max": 24.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.marcus.com/us/en/loans/personal-loans"
+  },
+  {
+    "name": "Avant",
+    "apr_min": 9.95,
+    "apr_max": 35.99,
+    "apr_source": "scraped",
+    "scraped_url": "https://www.avant.com/personal-loans"
+  },
+  {
+    "name": "Best Egg",
+    "apr_min": 6.99,
+    "apr_max": 35.99,
+    "apr_source": "scraped",
+    "scraped_url": "https://www.bestegg.com/personal-loans"
+  },
+  {
+    "name": "Upgrade",
+    "apr_min": 7.74,
+    "apr_max": 35.99,
+    "apr_source": "scraped",
+    "scraped_url": "https://www.upgrade.com/personal-loans"
+  },
+  {
+    "name": "Happy Money",
+    "apr_min": 7.99,
+    "apr_max": 29.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.happymoney.com/personal-loan"
+  },
+  {
+    "name": "Payoff",
+    "apr_min": 7.99,
+    "apr_max": 29.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.payoff.com"
+  },
+  {
+    "name": "Axos Bank",
+    "apr_min": 11.79,
+    "apr_max": 20.84,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.axosbank.com/personal-loans"
+  },
+  {
+    "name": "Wells Fargo Personal Loans",
+    "apr_min": 6.74,
+    "apr_max": 25.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.wellsfargo.com/personal-loans"
+  },
+  {
+    "name": "Citibank Personal Loans",
+    "apr_min": 9.99,
+    "apr_max": 17.49,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.citibank.com/us/personal-loans"
+  },
+  {
+    "name": "US Bank Personal Loans",
+    "apr_min": 6.74,
+    "apr_max": 24.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.usbank.com/loans/personal-loans"
+  },
+  {
+    "name": "TD Bank Personal Loans",
+    "apr_min": 6.99,
+    "apr_max": 23.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.td.com/us/en/personal-banking/loans"
+  },
+  {
+    "name": "PNC Bank Personal Loans",
+    "apr_min": 6.99,
+    "apr_max": 26.94,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.pnc.com/en/personal-banking/borrowing/personal-loans"
+  },
+  {
+    "name": "Citizens Bank Personal Loans",
+    "apr_min": 6.79,
+    "apr_max": 20.88,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.citizensbank.com/loans/personal-loan"
+  },
+  {
+    "name": "Truist Personal Loans",
+    "apr_min": 6.94,
+    "apr_max": 25.29,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.truist.com/loans-lines/personal-loans"
+  },
+  {
+    "name": "Regions Bank Personal Loans",
+    "apr_min": 9.24,
+    "apr_max": 29.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.regions.com/personal-banking/loans/personal-loans"
+  },
+  {
+    "name": "Navy Federal Credit Union",
+    "apr_min": 8.74,
+    "apr_max": 18.0,
+    "apr_source": "scraped",
+    "scraped_url": "https://www.navyfederal.org/loans-cards/personal-loans"
+  },
+  {
+    "name": "USAA Personal Loans",
+    "apr_min": 9.74,
+    "apr_max": 18.51,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.usaa.com/inet/wc/bank-personal-loans"
+  },
+  {
+    "name": "Alliant Credit Union",
+    "apr_min": 9.49,
+    "apr_max": 18.49,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.alliantcreditunion.org/loans/personal-loan"
+  },
+  {
+    "name": "PenFed Credit Union",
+    "apr_min": 8.99,
+    "apr_max": 17.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.penfed.org/personal-loans"
+  },
+  {
+    "name": "OppLoans",
+    "apr_min": 160.0,
+    "apr_max": 195.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.opploans.com"
+  },
+  {
+    "name": "NetCredit",
+    "apr_min": 34.0,
+    "apr_max": 99.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.netcredit.com"
+  },
+  {
+    "name": "OneMain Financial",
+    "apr_min": 18.0,
+    "apr_max": 35.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.onemainfinancial.com"
+  },
+  {
+    "name": "Funding Circle",
+    "apr_min": 10.64,
+    "apr_max": 31.85,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.fundingcircle.com/us/"
+  },
+  {
+    "name": "Bluevine",
+    "apr_min": 20.0,
+    "apr_max": 50.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.bluevine.com/business-line-of-credit"
+  },
+  {
+    "name": "OnDeck",
+    "apr_min": 35.26,
+    "apr_max": 99.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.ondeck.com/rates"
+  },
+  {
+    "name": "Kabbage (American Express)",
+    "apr_min": 9.0,
+    "apr_max": 36.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.kabbage.com"
+  },
+  {
+    "name": "Lendio",
+    "apr_min": 6.0,
+    "apr_max": 99.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.lendio.com"
+  },
+  {
+    "name": "Accion Opportunity Fund",
+    "apr_min": 5.99,
+    "apr_max": 24.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.accionopportunityfund.org/loans"
+  },
+  {
+    "name": "Kiva",
+    "apr_min": 0.0,
+    "apr_max": 0.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.kiva.org/borrow"
+  },
+  {
+    "name": "Giggle Finance",
+    "apr_min": 100.0,
+    "apr_max": 300.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.gigglefinance.com"
+  },
+  {
+    "name": "Moves Financial",
+    "apr_min": 19.57,
+    "apr_max": 25.27,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.movesfinancial.com"
+  },
+  {
+    "name": "myAutoloan",
+    "apr_min": 4.05,
+    "apr_max": 29.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.myautoloan.com"
+  },
+  {
+    "name": "Capital One Auto Finance",
+    "apr_min": 5.99,
+    "apr_max": 17.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.capitalone.com/auto-financing/rates"
+  },
+  {
+    "name": "AutoPay",
+    "apr_min": 4.65,
+    "apr_max": 17.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.autopay.com/auto-loan-rates"
+  },
+  {
+    "name": "Chase Auto Finance",
+    "apr_min": 5.99,
+    "apr_max": 24.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.chase.com/personal/auto/rates"
+  },
+  {
+    "name": "Bank of America Auto Loans",
+    "apr_min": 5.34,
+    "apr_max": 17.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.bankofamerica.com/auto-loans/auto-loan-rates"
+  },
+  {
+    "name": "Better Mortgage",
+    "apr_min": 6.35,
+    "apr_max": 8.5,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.better.com/mortgage-rates"
+  },
+  {
+    "name": "Rocket Mortgage",
+    "apr_min": 6.88,
+    "apr_max": 8.5,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.rocketmortgage.com/mortgage-rates"
+  },
+  {
+    "name": "Chase Mortgage",
+    "apr_min": 6.35,
+    "apr_max": 8.5,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.chase.com/personal/mortgage/rates"
+  },
+  {
+    "name": "Bank of America Mortgage",
+    "apr_min": 6.35,
+    "apr_max": 8.5,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.bankofamerica.com/mortgage/mortgage-rates"
+  },
+  {
+    "name": "CareCredit",
+    "apr_min": 17.9,
+    "apr_max": 32.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.carecredit.com/apply/rates.html"
+  },
+  {
+    "name": "Prosper Healthcare Lending",
+    "apr_min": 6.99,
+    "apr_max": 35.99,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.prosperhealthcare.com"
+  },
+  {
+    "name": "Earnest",
+    "apr_min": 3.14,
+    "apr_max": 16.74,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.earnest.com/student-loans/rates"
+  },
+  {
+    "name": "CommonBond",
+    "apr_min": 2.0,
+    "apr_max": 9.36,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.commonbond.co"
+  },
+  {
+    "name": "Southeast Financial",
+    "apr_min": 6.24,
+    "apr_max": 20.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.southeastfinancial.org/rv-loans"
+  },
+  {
+    "name": "Allegiant Travel Credit",
+    "apr_min": 0.0,
+    "apr_max": 36.0,
+    "apr_source": "fallback",
+    "scraped_url": "https://www.allegiantair.com"
+  }
+]

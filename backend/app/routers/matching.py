@@ -23,6 +23,10 @@ class BorrowerRequest(BaseModel):
     total_assets: Optional[float] = 0
     monthly_debt_payments: Optional[float] = 0
     income_stable: Optional[bool] = True
+    # Bonus dimensions — alternative data for gig/self-employed borrowers
+    income_continuity_months: Optional[int] = 0        # D7: months of continuous 1099/gig income
+    payment_behavior_score: Optional[float] = None     # D8: off-bureau payment score 0-100 (utilities, rent)
+    income_source_count: Optional[int] = 1             # D9: number of distinct income sources
 
 
 class MatchResponse(BaseModel):
@@ -30,6 +34,10 @@ class MatchResponse(BaseModel):
     score: float
     breakdown: dict
     explanation: str
+    apr_min: Optional[float] = None
+    apr_max: Optional[float] = None
+    estimated_apr: Optional[float] = None
+    apr_source: Optional[str] = None
 
 
 @router.post("/match", response_model=list[MatchResponse])
@@ -79,7 +87,11 @@ async def match_borrower(request: Request, borrower: BorrowerRequest, db: Sessio
             lender_name=m["lender"]["name"],
             score=m["score"],
             breakdown=m["breakdown"],
-            explanation=explanation
+            explanation=explanation,
+            apr_min=m.get("apr_min"),
+            apr_max=m.get("apr_max"),
+            estimated_apr=m.get("estimated_apr"),
+            apr_source=m.get("apr_source"),
         )
         for m in matches
     ]
