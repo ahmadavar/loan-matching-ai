@@ -31,7 +31,10 @@ import os
 from typing import List, Dict
 from copy import deepcopy
 
-from app.data.lenders import LENDERS
+try:
+    from backend.app.data.lenders import LENDERS
+except ModuleNotFoundError:
+    from app.data.lenders import LENDERS
 
 # ---------------------------------------------------------------------------
 # Paths
