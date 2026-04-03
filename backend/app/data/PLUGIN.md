@@ -142,14 +142,54 @@ in `loader.py`.
 
 ---
 
+## Scoring Engine — 9 Dimensions
+
+The matching engine in `services/matching.py` scores each lender out of **130 points**.
+Score maps to estimated APR via `estimate_apr()` in the same file.
+
+### Core dimensions (100 pts)
+| # | Dimension | Max pts | Hard disqualifier |
+|---|---|---|---|
+| 1 | Credit score | 20 | Yes — below min |
+| 2 | Income + stability | 20 | Yes — too low |
+| 3 | Assets / net worth | 15 | No |
+| 4 | Employment type + years | 20 | Yes — type not accepted |
+| 5 | DTI | 15 | Yes — DTI ≥ 100% |
+| 6 | Loan purpose | 10 | Yes — purpose not offered |
+
+### Bonus dimensions for gig/self-employed (30 pts)
+These reduce estimated APR by proving actual risk is lower than credit score suggests.
+Regulatory basis: Fannie Mae 2yr rule (D7), Experian Boost/CFPB (D8), business concentration risk (D9).
+
+| # | Dimension | Max pts | Input field |
+|---|---|---|---|
+| 7 | Income continuity (months of 1099) | 10 | `income_continuity_months` |
+| 8 | Off-bureau payment behavior (0–100) | 10 | `payment_behavior_score` |
+| 9 | Income source diversity (# clients) | 10 | `income_source_count` |
+
+Salaried borrowers receive near-full credit on D7–D9 automatically (employer verifies continuity, single employer is not a risk flag).
+
+### APR estimation formula
+```python
+estimated_apr = apr_min + (1 - score / 130) * (apr_max - apr_min)
+```
+Score 130/130 → apr_min (best rate). Score 0/130 → apr_max (worst rate).
+
+---
+
 ## Current Data Status (April 2026)
 
 | Lender | Synthetic | Scraped | API |
 |---|---|---|---|
+| Prosper | ✅ | ✅ **live scraped** | ❌ |
+| Avant | ✅ | ✅ **live scraped** | ❌ |
+| Best Egg | ✅ | ✅ **live scraped** | ❌ |
+| Upgrade | ✅ | ✅ **live scraped** | ❌ |
+| Navy Federal CU | ✅ | ✅ **live scraped** | ❌ |
 | SoFi | ✅ | ✅ (fallback) | ❌ pending |
-| LightStream | ✅ | ✅ (fallback) | ❌ |
 | Upstart | ✅ | ✅ (fallback) | ⏳ under review |
-| LendingClub | ✅ | ✅ (fallback) | ❌ |
-| Prosper | ✅ | ✅ live scraped | ❌ |
-| Discover | ✅ | ✅ (fallback) | ❌ |
-| All others (46) | ✅ | ❌ | ❌ |
+| Credible | ✅ | ✅ (fallback) | ⏳ application incomplete |
+| Engine by NerdWallet | ✅ | ✅ (fallback) | ⏳ no response yet |
+| All others (43) | ✅ | ✅ (fallback) | ❌ |
+
+All 52 lenders have real APR ranges. "fallback" = verified from public rate disclosures (April 2026), not live-scraped.

@@ -55,7 +55,9 @@ economy — a segment Upstart still underserves.
 
 ## The Data Advantage
 
-### Current dimensions (rule-based matching)
+### Current dimensions — built and live (9 total, 130 pts)
+
+**Core 6 (100 pts) — eligibility and baseline risk:**
 1. Credit score
 2. Income + stability
 3. Assets / net worth
@@ -63,25 +65,35 @@ economy — a segment Upstart still underserves.
 5. Debt-to-income ratio
 6. Loan purpose
 
-### Target dimensions (verified risk profile)
+**Bonus 3 (30 pts) — alternative data for gig workers:**
+
+| # | Dimension | What it proves | Regulatory basis |
+|---|---|---|---|
+| 7 | Income continuity (months of 1099) | Consistent self-employment over time | Fannie Mae 2-year self-employment guideline |
+| 8 | Off-bureau payment behavior | On-time payments invisible to credit bureaus | Experian Boost precedent + CFPB alternative data guidance |
+| 9 | Income source diversity | Multiple clients = resilient income, low concentration risk | Business underwriting concentration risk principles |
+
+These 3 bonus dimensions can move a gig worker's estimated APR by 4–7% on real lender rate ranges — entirely from data they already have, before any bank verification.
+
+### Target dimensions — next layer (verified via Plaid)
 
 | Dimension | Data Source | What It Proves |
 |---|---|---|
-| 24-month income history | Plaid (bank deposits) | Income is real and consistent |
+| 24-month income history | Plaid (bank deposits) | Income is real, not self-reported |
 | Income trend | Plaid (month-over-month) | Growing vs declining business |
-| Expense-to-income ratio | Plaid (bank outflows) | True DTI, not estimated |
-| Payment consistency | Plaid (recurring payments) | On-time behavior outside credit bureau |
-| Income source diversity | Plaid (deposit sources) | Multiple clients = lower concentration risk |
-| Asset ownership | Self-reported + title docs | Collateral and financial cushion |
-| Business tenure | Self-reported + verified | Stability of self-employment |
-| Platform ratings | Uber/Airbnb/Etsy API | Reputation as a signal of reliability |
+| True expense-to-income ratio | Plaid (bank outflows) | Actual DTI, not estimated |
+| Recurring payment consistency | Plaid (recurring debits) | Verifiable on-time behavior |
+| Income source count (verified) | Plaid (deposit sources) | Confirmed client diversity |
+| Asset ownership | Title document upload + OCR | Verifiable collateral |
+| Platform reputation | Uber/Airbnb/Stripe API | Reliability as a signal |
 
 ### Why banks don't collect this today
-- Standard applications are built for W-2 employees — the gig worker is an edge case
+- Standard applications were built for W-2 employees — gig workers are an edge case
 - Verification infrastructure (Plaid, open banking) is still maturing
-- Lenders lack the incentive to build custom flows for a segment they consider risky
+- Lenders lack incentive to build custom flows for a segment they consider risky
 
 **LoanMatch builds that infrastructure on behalf of the borrower.**
+When lenders are ready to consume it — or when regulation pushes them there — the data layer is already built.
 
 ---
 
@@ -109,24 +121,26 @@ This is the long-term moat. Data + trust = pricing power.
 
 ## Current State vs Target State
 
-### Today (v1)
-- 6-dimension rule-based matching
-- Synthetic lender data (APR ranges from public disclosures)
+### v1 — Done ✅
+- 9-dimension scoring engine (6 core + 3 gig bonus dimensions)
+- Real APR ranges for all 52 lenders (scraped from public disclosures)
+- APR estimation: score maps to position within real lender rate range
+- Live risk simulator UI — sliders show APR impact before submitting
 - Claude explains match results in plain English
-- No bank data, no verification layer
+- Deployed on Railway with Docker + CI
 
-### Near term (v2)
-- Plaid integration — real income verification
-- Expanded dimensions (income trend, expense ratio, payment consistency)
-- "What If" coaching — show borrower what to improve and by how much
-- Real APR ranges from scraped public data ✅ (done)
+### v2 — Next (Plaid integration)
+- Replace self-reported bonus sliders with verified bank data via Plaid
+- 24-month income history, true DTI, payment consistency — all verified
+- Borrower connects bank once → LoanMatch builds their verified risk profile
+- Same 9 dimensions, same scoring engine — data source upgrades from "told us" to "proved it"
 
-### Target state (v3)
-- Full verified risk profile packaged as a structured document
-- Lender API integrations that accept enriched profiles
+### v3 — Target
+- Full verified risk profile packaged as a structured lender-ready document
+- Lender API integrations that accept enriched profiles (not just referrals)
 - Borrower sees: "Your verified profile qualifies you for X% — here's why"
-- Lender sees: "This borrower's bureau score is 640 but their verified profile
-  indicates repayment risk equivalent to a 700 borrower"
+- Lender sees: "Bureau score 640 but verified profile = 700-equivalent risk"
+- Revenue model shifts from lead-gen to profile-as-a-service
 
 ---
 
