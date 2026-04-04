@@ -1,3 +1,4 @@
+import traceback
 from fastapi import APIRouter, Request, HTTPException, Depends
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -81,6 +82,7 @@ async def match_borrower(request: Request, borrower: BorrowerRequest, db: Sessio
     except Exception as e:
         db.rollback()
         print(f"[match] MatchResult DB write failed: {e}")
+        traceback.print_exc()
 
     return [
         MatchResponse(

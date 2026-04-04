@@ -1,3 +1,4 @@
+import traceback
 from fastapi import APIRouter, Request, Depends
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -67,6 +68,7 @@ async def chat(request: Request, body: ChatRequest, db: Session = Depends(get_db
         except Exception as e:
             db.rollback()
             print(f"[chat] MatchResult DB write failed: {e}")
+            traceback.print_exc()
 
     return ChatResponse(
         reply=result["reply"],
