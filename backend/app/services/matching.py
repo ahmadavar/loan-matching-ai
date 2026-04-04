@@ -212,10 +212,10 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
         breakdown["income_diversity"] = {"points": 7, "note": "Salaried — single employer income is standard"}
         total += 7
 
-    return round(total, 2), breakdown
+    return round(min(total, 100.0), 2), breakdown
 
 
-def estimate_apr(score: float, apr_min: float, apr_max: float, max_score: float = 130.0) -> float:
+def estimate_apr(score: float, apr_min: float, apr_max: float, max_score: float = 100.0) -> float:
     """
     Estimate a borrower's APR within a lender's real rate range based on their score.
     Higher score = closer to apr_min. Lower score = closer to apr_max.
