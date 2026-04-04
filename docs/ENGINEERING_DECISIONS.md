@@ -30,9 +30,18 @@ Three extra scoring dimensions exist in the model but are **not collected from u
 
 **Why they exist:** Designed to enrich gig/self-employed borrower profiles using external data pipelines (credit bureau alternatives, scraped payment history), not user input. Gig workers look riskier on paper than they are — these dimensions close that gap.
 
-**Current status:** Always default to 0/None. Bonus points never fire. Dormant until a data enrichment pipeline is built.
+**Current status:** Inferred from existing profile fields via `backend/app/services/enrichment.py` (live as of 2026-04-04):
 
-**Future plan:** Backend enriches these fields from external sources before scoring. User submits basic profile → pipeline populates D7–D9 → scorer runs with full 130-point potential → capped back to 100 for display.
+| Dimension | Inference Logic |
+|---|---|
+| D7 `income_continuity_months` | `years_at_current_work × 12` for gig/self-employed, 0 for salaried |
+| D8 `payment_behavior_score` | 90 if stable + DTI < 20%, 75 if stable + DTI < 36%, 60 if stable, 45 otherwise |
+| D9 `income_source_count` | 3 for gig, 2 for self-employed/freelance, 1 for salaried |
+
+Applied in both `/api/match` route and chat orchestrator before scoring runs.
+
+**Future improvement — Plaid integration:**
+Replace inference with real bank data. Plaid connects to user's bank account (with consent), returns transaction history, income deposits, and payment behavior. Enables accurate D7–D9 without asking users extra questions. Cost: ~$0.30–0.60/user/month. Trigger: when lender partners start requesting richer borrower profiles.
 
 ---
 

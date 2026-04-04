@@ -7,6 +7,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from backend.app.services.matching import find_matches, explain_matches
 from backend.app.services.providers import get_lenders
+from backend.app.services.enrichment import enrich_bonus_dimensions
 from backend.app.database import get_db
 from backend.app.models.match_result import MatchResult
 
@@ -49,7 +50,7 @@ async def match_borrower(request: Request, borrower: BorrowerRequest, db: Sessio
     if not lenders_data:
         raise HTTPException(status_code=503, detail="Lender database is empty.")
 
-    borrower_dict = borrower.model_dump()
+    borrower_dict = enrich_bonus_dimensions(borrower.model_dump())
     matches = find_matches(borrower_dict, lenders_data, top_k=5)
 
     if not matches:

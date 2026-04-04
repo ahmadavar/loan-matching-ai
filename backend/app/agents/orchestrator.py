@@ -11,6 +11,7 @@ Flow:
   6. ImprovementAdvisor  — fires if best score < 60 or no matches
 """
 from backend.app.agents.extractor import extract_borrower_profile, fill_defaults
+from backend.app.services.enrichment import enrich_bonus_dimensions
 from backend.app.agents.screener import screen_borrower
 from backend.app.agents.matcher import find_matches
 from backend.app.agents.explainer import explain_matches
@@ -122,8 +123,8 @@ def run(message: str, gathered_profile: dict, pending_field: str | None, lenders
             "pending_field": next_field,
         }
 
-    # All fields collected — fill defaults and run matching pipeline
-    profile = fill_defaults(merged)
+    # All fields collected — fill defaults and enrich bonus dimensions
+    profile = enrich_bonus_dimensions(fill_defaults(merged))
 
     # --- Agent 2: Eligibility Screener ---
     passed, disqualify_reason = screen_borrower(profile)
