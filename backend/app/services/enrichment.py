@@ -12,7 +12,7 @@ def enrich_bonus_dimensions(profile: dict) -> dict:
     dti = (monthly_debt * 12 / annual_income * 100) if annual_income > 0 else 100
 
     # D7: income_continuity_months — derive from years at work
-    if emp in ("self_employed", "gig", "freelance"):
+    if emp in ("self_employed", "gig", "freelance", "contractor"):
         profile["income_continuity_months"] = int(years * 12)
     else:
         profile["income_continuity_months"] = 0
@@ -30,7 +30,7 @@ def enrich_bonus_dimensions(profile: dict) -> dict:
     # D9: income_source_count — proxy from employment type
     if emp == "gig":
         profile["income_source_count"] = 3
-    elif emp in ("self_employed", "freelance"):
+    elif emp in ("self_employed", "freelance", "contractor"):
         profile["income_source_count"] = 2
     else:
         profile["income_source_count"] = 1
