@@ -1,3 +1,4 @@
+import traceback
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from typing import Optional
@@ -29,4 +30,5 @@ def log_event(payload: EventPayload, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         print(f"[events] DB write failed: {e}")
+        traceback.print_exc()
     return {"ok": True}
