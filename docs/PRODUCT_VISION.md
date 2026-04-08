@@ -123,17 +123,37 @@ This is the long-term moat. Data + trust = pricing power.
 
 ### v1 — Done ✅
 - 9-dimension scoring engine (6 core + 3 gig bonus dimensions)
-- Real APR ranges for all 52 lenders (scraped from public disclosures)
+- 52 lenders with real APR ranges (6 with live-scraped rates, rest from public disclosures)
 - APR estimation: score maps to position within real lender rate range
-- Live risk simulator UI — sliders show APR impact before submitting
-- Claude explains match results in plain English
-- Deployed on Railway with Docker + CI
+- Conversational AI interface (5-agent pipeline: extractor → screener → matcher → explainer → advisor)
+- Form-based matching UI with expandable score breakdowns
+- Loan calculator, lender directory, event tracking, contact form
+- Deployed on Railway with Docker + CI + dbt/Airflow analytics pipeline
+- D7–D9 bonus dimensions live but inferred (not verified) via enrichment.py
 
-### v2 — Next (Plaid integration)
-- Replace self-reported bonus sliders with verified bank data via Plaid
-- 24-month income history, true DTI, payment consistency — all verified
+### v2 — Active (shipping now)
+
+**v2a — Lender data upgrade (no external dependency)**
+- [ ] Expand live-scraped APR data from 6 → 30+ lenders (all have public rate pages)
+- [ ] Apply for Experian Connect API — consumer-permissioned credit data (never applied; do now)
+- [ ] Apply for Credible, LendingTree, Bankrate affiliate/API programs (faster approvals than Engine/Upstart)
+- [ ] Pre-Match Report: shareable 1-page summary of borrower profile, why they qualify/don't, 3 improvement actions — uses existing advisor agent, no new infrastructure
+
+**v2b — Plaid income verification**
+- Replace D7–D9 heuristic inference with verified bank data
+- 24-month income history, true DTI, payment consistency — all from Plaid read-only connection
 - Borrower connects bank once → LoanMatch builds their verified risk profile
 - Same 9 dimensions, same scoring engine — data source upgrades from "told us" to "proved it"
+- Plaid sandbox: full development with no real bank accounts, no approval needed
+- Show "Verified" badge on match results when Plaid data is used
+- Unlocks the verifiability principle in practice, not just theory
+
+**v2c — Real lender feeds (pending approvals)**
+- Engine by Even Financial API — applied, awaiting approval
+- Upstart affiliate API — applied, awaiting approval
+- Experian Connect — apply now
+- Credible / LendingTree — apply now
+- Clean swap point: only `providers.py` changes when APIs go live
 
 ### v3 — Target
 - Full verified risk profile packaged as a structured lender-ready document
@@ -169,6 +189,74 @@ Plaid has a free sandbox environment — full development without real bank
 accounts. Integration can be built and demonstrated without a single real user.
 
 **Sandbox docs:** plaid.com/docs/sandbox
+
+---
+
+---
+
+## Action Plan — Next 2 Weeks
+
+### Week 1 (no external dependencies — ship all of this)
+
+| Task | Why | Where |
+|---|---|---|
+| Apply for Experian Connect API | Consumer-permissioned credit data — never applied, do now | developer.experian.com |
+| Apply for Credible affiliate API | Faster approval than Engine/Upstart, real rate feed | credible.com/partners |
+| Apply for LendingTree affiliate | Same — real rates, high lender volume | lendingtree.com/partners |
+| Apply for Bankrate rate feed | Rate data for APR credibility | bankrate.com/advertise |
+| Expand scraped rates 6 → 30 lenders | All 52 lenders have public rate pages — credibility upgrade | `data/scraped/rates.json` |
+| Build Pre-Match Report UI | Shareable artifact, uses existing advisor agent output | new `/report` page |
+| Start Plaid sandbox integration | No approval needed — full dev in sandbox | `plaid.com/docs/sandbox` |
+
+### Week 2
+
+| Task | Why |
+|---|---|
+| Plaid Link on `/match` page | "Verify income for better matches" — optional, not required |
+| Replace D7–D9 inference with Plaid data | Real bank data → verified badge on results |
+| Polish Pre-Match Report | Screenshot-worthy, shareable |
+| LinkedIn Post 1 | Bank verification milestone |
+
+### What to skip (permanently deprioritized)
+
+- Negotiation coaching — requires real lender relationships at scale
+- Automated application submission — requires deep lender API integrations
+- A/B testing framework — no traffic volume to make it meaningful
+- Experian credit pull — consumer-permissioned (Experian Connect) is better and faster
+
+---
+
+## LinkedIn Content Plan
+
+### Post 1 — End of Week 1 (Plaid milestone)
+
+> Added bank verification to LoanMatch AI via Plaid.
+>
+> Instead of asking "how much do you make?" — you connect your bank and we see 24 months of real deposits, income trends, and payment behavior.
+>
+> For a gig worker, that's the difference between "irregular income, high risk" and "consistent deposits, 3 clients, 90% on-time payments."
+>
+> Same person. Very different picture.
+>
+> [screenshot of verified match result with badge]
+
+### Post 2 — End of Week 2 (Pre-Match Report)
+
+> Built a Pre-Match Report — a one-page breakdown of your borrower profile before you apply anywhere.
+>
+> It shows: your credit tier, income tier, DTI, why you qualify or don't for each loan category, and 3 specific things you can do to improve your rate.
+>
+> Here's what mine looks like. [screenshot]
+>
+> The goal: stop applying blind, start applying with a plan.
+
+### Post 3 — When Engine/Upstart approvals land
+
+> LoanMatch AI now has real-time pre-qualified offers from [X] lenders.
+>
+> Not estimated rates. Actual pre-qualification — with a soft pull, no credit impact.
+>
+> [demo video or screenshot]
 
 ---
 
