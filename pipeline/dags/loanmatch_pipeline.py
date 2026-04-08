@@ -15,7 +15,7 @@ from airflow.operators.bash import BashOperator
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 GCP_PROJECT   = "electric-cosine-485318-f9"
-GCS_BUCKET    = "de-zoomcamp-ahmad-2026"
+GCS_BUCKET    = "loanmatch-analytics"
 GCS_PREFIX    = "loanmatch"
 BQ_DATASET    = "loanmatch_raw"
 BQ_TABLE      = "match_results"

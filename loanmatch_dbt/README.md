@@ -1,15 +1,29 @@
-Welcome to your new dbt project!
+# LoanMatch AI — dbt Analytics Layer
 
-### Using the starter project
+Transforms raw applicant match events from BigQuery into business-ready analytics tables.
 
-Try running the following commands:
-- dbt run
-- dbt test
+## Models
 
+**Staging** (views — always fresh):
+- `stg_match_results` — cleaned match data with derived DTI ratio and credit band
+- `stg_lenders` — lender reference with loan size tier classification
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+**Marts** (tables — optimized for dashboard queries):
+- `mart_applicant_funnel` — match conversion rates by credit band × employment type × loan purpose
+- `mart_lender_performance` — lender ranking by volume, average score, and quality rate
+
+## Data Tests
+
+- Primary key uniqueness and null checks on all models
+- Credit score range validation (300–850)
+- Accepted values on `employment_type` and `loan_purpose`
+
+## Running
+
+```bash
+dbt run          # build all models
+dbt test         # run data quality tests
+dbt docs generate && dbt docs serve  # view lineage graph
+```
+
+Published docs: [ahmadavar.github.io/loan-matching-ai](https://ahmadavar.github.io/loan-matching-ai/)
