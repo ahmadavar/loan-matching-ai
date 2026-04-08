@@ -1,5 +1,7 @@
 # LoanMatch AI
 
+> **DE Zoomcamp reviewer?** The capstone project (Airflow DAG, dbt models, BigQuery pipeline, Looker Studio dashboard) is documented here: [08-capstone →](https://github.com/ahmadavar/data-engineering-zoomcamp-2026/tree/main/08-capstone)
+
 > An AI-powered loan matching platform built for the people traditional banks ignore — gig workers, freelancers, contractors, and self-employed professionals.
 
 **Live**: [loanmatchai.app](https://www.loanmatchai.app) | **Data Pipeline Docs**: [dbt lineage & models](https://ahmadavar.github.io/loan-matching-ai/)
