@@ -33,8 +33,10 @@ from copy import deepcopy
 
 try:
     from backend.app.data.lenders import LENDERS
+    from backend.app.data.affiliate_links import AFFILIATE_LINKS
 except ModuleNotFoundError:
     from app.data.lenders import LENDERS
+    from app.data.affiliate_links import AFFILIATE_LINKS
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -132,6 +134,7 @@ def get_lenders() -> List[dict]:
         if name in api:
             base = _merge(base, api[name])
 
+        base["affiliate_url"] = AFFILIATE_LINKS.get(name)
         result.append(base)
 
     return result

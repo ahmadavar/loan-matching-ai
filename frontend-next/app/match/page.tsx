@@ -32,6 +32,7 @@ interface Match {
   apr_max?: number;
   estimated_apr?: number;
   apr_source?: string;
+  affiliate_url?: string | null;
 }
 
 const EMPLOYMENT_OPTIONS = [
@@ -92,12 +93,17 @@ function MatchCard({ match, rank, simulatedApr }: { match: Match; rank: number; 
           <span className="text-xs text-white/45 font-mono w-5">#{rank}</span>
           <div>
             <div className="text-sm font-semibold">{match.lender_name}</div>
-            {match.website && (
+            {match.affiliate_url ? (
+              <a href={match.affiliate_url} target="_blank" rel="noopener noreferrer sponsored"
+                className="text-xs text-emerald-400 hover:underline font-medium">
+                Apply now →
+              </a>
+            ) : match.website ? (
               <a href={match.website} target="_blank" rel="noopener noreferrer"
                 className="text-xs text-[#38bdf8] hover:underline">
                 Visit lender →
               </a>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -213,6 +219,59 @@ export default function MatchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+  const [plaidVerified, setPlaidVerified] = useState(false);
+  const [plaidLoading, setPlaidLoading] = useState(false);
+  const [plaidError, setPlaidError] = useState("");
+
+  async function verifyWithPlaid() {
+    setPlaidLoading(true);
+    setPlaidError("");
+    try {
+      const res = await fetch(`${API}/api/plaid/link_token`, { method: "POST" });
+      if (res.status === 503) {
+        setPlaidError("Plaid verification coming soon — not yet configured.");
+        return;
+      }
+      if (!res.ok) throw new Error("Failed to get link token");
+      const { link_token } = await res.json();
+
+      await new Promise<void>((resolve, reject) => {
+        if ((window as unknown as Record<string, unknown>).Plaid) { resolve(); return; }
+        const script = document.createElement("script");
+        script.src = "https://cdn.plaid.com/link/v2/stable/link-initialize.js";
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Failed to load Plaid script"));
+        document.head.appendChild(script);
+      });
+
+      const handler = (window as unknown as { Plaid: { create: (cfg: unknown) => { open: () => void } } }).Plaid.create({
+        token: link_token,
+        onSuccess: async (public_token: string) => {
+          const exchRes = await fetch(`${API}/api/plaid/exchange`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ public_token, user_id: "anonymous" }),
+          });
+          if (!exchRes.ok) throw new Error("Token exchange failed");
+          const dims = await exchRes.json();
+          setForm(f => ({
+            ...f,
+            income_continuity_months: dims.income_continuity_months ?? f.income_continuity_months,
+            payment_behavior_score: dims.payment_behavior_score ?? f.payment_behavior_score,
+            income_source_count: dims.income_source_count ?? f.income_source_count,
+          }));
+          setPlaidVerified(true);
+          setDone(false);
+        },
+        onExit: () => {},
+      });
+      handler.open();
+    } catch {
+      setPlaidError("Could not connect to Plaid. Try again.");
+    } finally {
+      setPlaidLoading(false);
+    }
+  }
 
   useEffect(() => { track("page_view", "/match"); }, []);
 
@@ -399,6 +458,22 @@ export default function MatchPage() {
             <p className="text-xs text-white/50 -mt-2">
               These 3 dimensions can lower your estimated APR by proving your actual risk is lower than your credit score suggests.
             </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <button
+                type="button"
+                onClick={verifyWithPlaid}
+                disabled={plaidLoading || plaidVerified}
+                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                  plaidVerified
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default"
+                    : "bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 hover:bg-[#38bdf8]/25 disabled:opacity-50"
+                }`}
+              >
+                {plaidVerified ? "✓ Plaid Verified — sliders auto-filled" : plaidLoading ? "Connecting…" : "Auto-fill with Plaid →"}
+              </button>
+              <span className="text-xs text-white/35">or set sliders manually below</span>
+            </div>
+            {plaidError && <p className="text-xs text-amber-400">{plaidError}</p>}
 
             {/* D7 — Income continuity */}
             <div className="space-y-1.5">

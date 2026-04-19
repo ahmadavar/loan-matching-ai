@@ -64,6 +64,8 @@ LoanMatch AI uses a **multi-dimensional scoring engine** that evaluates borrower
 | Backend | Python, FastAPI |
 | AI | Anthropic Claude API (Haiku), pgvector embeddings |
 | Database | PostgreSQL |
+| Income Verification | Plaid (sandbox active, production-ready) |
+| Affiliate Network | FlexOffers / ShareASale (infrastructure built) |
 | Data Platform | Airflow, dbt, Kafka *(in progress)* |
 | Infrastructure | Docker, Railway, GitHub Actions |
 
@@ -76,14 +78,19 @@ All lender data flows through a single `get_lenders()` function — swapping pha
 ### Phase 1 — Static Profiles (current)
 52 manually researched lender profiles seeded into PostgreSQL. Covers major banks (Chase, BofA, Wells Fargo), credit unions (Navy Federal, USAA, PenFed), fintechs (SoFi, Upstart, LendingClub), and specialists across personal, auto, home, business, medical, and education loans.
 
-### Phase 2 — Engine by Even Financial API *(integration built, pending partnership approval)*
+### Phase 2 — Affiliate Network *(infrastructure complete)*
+While direct API partnerships are under review, the affiliate layer is fully wired. `affiliate_links.py` maps every lender to a tracking URL; `loader.py` attaches the URL to each lender record; the match response surfaces it to the frontend as an "Apply now →" button (green, with `rel="sponsored"`). Activating a new affiliate partner requires adding one URL — no backend changes.
+
+**Affiliate programs pending:** FlexOffers, ShareASale (personal loans vertical). No traffic floor or review delay.
+
+### Phase 3 — Engine by Even Financial API *(integration built, pending partnership approval)*
 The integration layer is complete. `providers.py` is the single swap point — replacing `get_lenders()` with an Engine API call delivers real-time pre-qualified offers from 100+ lenders (the same aggregator powering NerdWallet and Credit Karma) with zero changes to the matching engine, scoring logic, or frontend.
 
 **What changes when approved:** only `providers.py`. Everything else is untouched.
 
 **Partnership application submitted.** Engine by Even Financial is a gated partner API — approval in progress.
 
-### Phase 3 — Hybrid (future)
+### Phase 4 — Hybrid (future)
 Engine API for real-time rates + DB for niche lenders not covered by the aggregator (CDFIs, microfinance, credit unions).
 
 ---
@@ -109,6 +116,8 @@ The AI layer was refactored from a single Claude call into a 5-agent orchestrate
 - 52+ curated lender profiles across all loan types
 - AI-generated advisor verdict per match
 - Dimension-by-dimension score breakdown
+- **Plaid income verification** — gig workers connect bank account to auto-fill D7/D8/D9 bonus dimensions
+- **Affiliate deep-links** — "Apply now →" directs users to lender application with tracking
 - Rate limiting + abuse prevention
 - Dark mode, mobile-responsive UI
 
@@ -144,9 +153,11 @@ docker compose up
 ## API
 
 ```
-POST /api/match     — Score borrower against all lenders
-POST /api/chat      — Conversational profile extraction + matching
-GET  /health        — Health check
+POST /api/match              — Score borrower against all lenders (returns affiliate_url per match)
+POST /api/chat               — Conversational profile extraction + matching
+POST /api/plaid/link_token   — Generate Plaid Link token for bank connection
+POST /api/plaid/exchange     — Exchange public token → derive D7/D8/D9 bonus dimensions
+GET  /health                 — Health check
 ```
 
 ---
@@ -160,6 +171,8 @@ GET  /health        — Health check
 - [x] Docker + Railway deployment
 - [x] Next.js frontend (replacing Streamlit)
 - [x] Multi-agent orchestration (5 agents)
+- [x] Affiliate link infrastructure (FlexOffers / ShareASale — awaiting tracking URLs)
+- [x] Plaid income verification — backend complete, frontend Plaid Link button live
 - [x] Engine by Even Financial API integration layer (built — pending partner approval)
 - [ ] Airflow lender data pipeline
 - [ ] dbt analytics models

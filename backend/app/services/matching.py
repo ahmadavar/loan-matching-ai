@@ -89,7 +89,8 @@ def score_lender(lender: Dict, borrower: Dict) -> tuple[float, Dict]:
         breakdown["assets"] = {"points": 0, "note": "No significant assets"}
 
     # 4. Employment Type + Experience (20 points)
-    emp_type = borrower.get("employment_type", "salaried")
+    _emp_alias = {"full_time": "salaried", "part_time": "salaried"}
+    emp_type = _emp_alias.get(borrower.get("employment_type", "salaried"), borrower.get("employment_type", "salaried"))
     years_exp = borrower.get("years_at_current_work", 0)
     lender_friendly = lender.get("self_employed_friendly", False)
     accepted_types = lender.get("accepted_employment_types", ["salaried", "self_employed", "gig", "contractor"])

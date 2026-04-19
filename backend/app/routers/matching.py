@@ -40,6 +40,7 @@ class MatchResponse(BaseModel):
     apr_max: Optional[float] = None
     estimated_apr: Optional[float] = None
     apr_source: Optional[str] = None
+    affiliate_url: Optional[str] = None
 
 
 @router.post("/match", response_model=list[MatchResponse])
@@ -95,6 +96,7 @@ async def match_borrower(request: Request, borrower: BorrowerRequest, db: Sessio
             apr_max=m.get("apr_max"),
             estimated_apr=m.get("estimated_apr"),
             apr_source=m.get("apr_source"),
+            affiliate_url=m["lender"].get("affiliate_url"),
         )
         for m in matches
     ]

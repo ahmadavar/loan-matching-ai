@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from backend.app.routers import matching, chat, contact, events
+from backend.app.routers import matching, chat, contact, events, plaid
 from backend.app.database import engine
 from backend.app.models.lender import Base
 from backend.app.models.match_result import MatchResult  # noqa: F401 — ensures table is registered
@@ -39,6 +39,7 @@ app.include_router(matching.router, prefix="/api", tags=["matching"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(contact.router, prefix="/api", tags=["contact"])
 app.include_router(events.router, prefix="/api", tags=["events"])
+app.include_router(plaid.router, prefix="/api", tags=["plaid"])
 
 
 @app.get("/health")

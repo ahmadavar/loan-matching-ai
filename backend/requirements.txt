@@ -6,3 +6,4 @@ anthropic
 python-dotenv
 pydantic[email]
 slowapi
+plaid-python
