@@ -7,22 +7,31 @@ from sqlalchemy import text
 from backend.app.routers import matching, chat, contact, events, plaid
 from backend.app.database import engine
 from backend.app.models.lender import Base
-from backend.app.models.match_result import MatchResult  # noqa: F401 — ensures table is registered
-from backend.app.models.contact import ContactRequest    # noqa: F401
-from backend.app.models.user_event import UserEvent      # noqa: F401
+from backend.app.models.match_result import MatchResult      # noqa: F401
+from backend.app.models.contact import ContactRequest        # noqa: F401
+from backend.app.models.user_event import UserEvent          # noqa: F401
+from backend.app.models.borrower import BorrowerProfile      # noqa: F401 — registers table so it exists in Railway
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Auto-create any missing tables on startup (safe — won't drop existing ones)
+# Create any tables that don't exist yet (safe — never drops existing ones)
 Base.metadata.create_all(bind=engine)
 
-# Run column migrations for tables that already existed before new columns were added.
-# ALTER TABLE ... ADD COLUMN IF NOT EXISTS is idempotent and safe to run every startup.
+# Column migrations: ALTER TABLE ... ADD COLUMN IF NOT EXISTS is idempotent.
+# Run on every startup to backfill schema changes that create_all can't apply
+# to pre-existing tables. Add a line here whenever a new column is added to
+# an existing model.
+_COLUMN_MIGRATIONS = [
+    # match_results — analytics columns added 2026-03-18 after table existed
+    "ALTER TABLE match_results ADD COLUMN IF NOT EXISTS outcome VARCHAR",
+    "ALTER TABLE match_results ADD COLUMN IF NOT EXISTS state VARCHAR",
+    "ALTER TABLE match_results ADD COLUMN IF NOT EXISTS funded_amount FLOAT",
+]
+
 with engine.connect() as _conn:
-    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS outcome VARCHAR"))
-    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS state VARCHAR"))
-    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS funded_amount FLOAT"))
+    for _stmt in _COLUMN_MIGRATIONS:
+        _conn.execute(text(_stmt))
     _conn.commit()
 
 limiter = Limiter(key_func=get_remote_address)

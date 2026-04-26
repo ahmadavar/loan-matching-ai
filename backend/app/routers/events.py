@@ -27,8 +27,9 @@ def log_event(payload: EventPayload, db: Session = Depends(get_db)):
     try:
         db.add(event)
         db.commit()
+        return {"ok": True}
     except Exception as e:
         db.rollback()
         print(f"[events] DB write failed: {e}")
         traceback.print_exc()
-    return {"ok": True}
+        return {"ok": False, "error": str(e)}
