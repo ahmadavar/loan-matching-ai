@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from sqlalchemy import text
 from backend.app.routers import matching, chat, contact, events, plaid
 from backend.app.database import engine
 from backend.app.models.lender import Base
@@ -15,6 +16,14 @@ load_dotenv()
 
 # Auto-create any missing tables on startup (safe — won't drop existing ones)
 Base.metadata.create_all(bind=engine)
+
+# Run column migrations for tables that already existed before new columns were added.
+# ALTER TABLE ... ADD COLUMN IF NOT EXISTS is idempotent and safe to run every startup.
+with engine.connect() as _conn:
+    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS outcome VARCHAR"))
+    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS state VARCHAR"))
+    _conn.execute(text("ALTER TABLE match_results ADD COLUMN IF NOT EXISTS funded_amount FLOAT"))
+    _conn.commit()
 
 limiter = Limiter(key_func=get_remote_address)
 
